@@ -12,6 +12,12 @@ public class ColorButton {
     private ImageView flashColor;
     private String sound;
 
+    ColorButton(ImageView baseColor, ImageView flashColor, String sound){
+        this.baseColor = baseColor;
+        this.flashColor = flashColor;
+        this.sound = sound;
+    }
+
     //Getters and Setters
     public ImageView getBaseColor() {
         return baseColor;
