@@ -1,8 +1,13 @@
 package com.amyhill.simon;
 
-/**
- * Created by Amy on 2/21/2017.
- */
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-public class AboutActivity {
+public class AboutActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
 }
