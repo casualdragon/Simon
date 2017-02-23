@@ -1,5 +1,7 @@
 package com.amyhill.simon;
 
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.widget.ImageView;
 
 /**
@@ -41,6 +43,11 @@ public class ColorButton {
 
     public void setSound(String sound) {
         this.sound = sound;
+    }
+
+    //Methods
+    public void playSound(SoundPool soundPool){
+
     }
 
 }
