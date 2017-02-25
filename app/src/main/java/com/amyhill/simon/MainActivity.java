@@ -1,5 +1,6 @@
 package com.amyhill.simon;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,13 +23,13 @@ public class MainActivity extends AppCompatActivity {
 
         play.setBaseColor(R.drawable.blue_button);
         ins.setBaseColor(R.drawable.green_button);
-        about.setBaseColor(R.drawable.red_button);
-        exit.setBaseColor(R.drawable.yellow_button);
+        about.setBaseColor(R.drawable.yellow_button);
+        exit.setBaseColor(R.drawable.red_button);
 
         play.setFlashColor(R.drawable.blueflash_button);
         ins.setFlashColor(R.drawable.greenflash_button);
-        about.setFlashColor(R.drawable.redflash_button);
-        exit.setFlashColor(R.drawable.yellowflash_button);
+        about.setFlashColor(R.drawable.yellowflash_button);
+        exit.setFlashColor(R.drawable.redflash_button);
 
         clickListener listener = new clickListener();
 
@@ -45,9 +46,18 @@ public class MainActivity extends AppCompatActivity {
             ColorButton button = (ColorButton) v;
             button.flashButton(duration);
 
-            if(v.getId() == R.id.exit_button){
+            int viewid = v.getId();
+
+            if (viewid == R.id.play_button) {
+                launchActivity(GameSelectionActvity.class);
+            } else if (viewid == R.id.exit_button){
                 finish();
             }
+        }
+
+        private void launchActivity(Class<?> activity){
+            Intent intent = new Intent(MainActivity.this, activity);
+            startActivity(intent);
         }
     }
 
