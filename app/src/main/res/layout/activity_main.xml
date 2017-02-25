@@ -8,6 +8,74 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+
+    android:background="@color/colorPrimaryDark"
     tools:context="com.amyhill.simon.MainActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:text="Simon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/title_textview"
+            android:textAlignment="center"
+            android:textStyle="normal|bold"
+            android:fontFamily="casual"
+            android:textSize="70sp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/colorText"
+            android:layout_marginTop="30dp" />
+
+        <com.amyhill.simon.ColorButton
+            android:text="Play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/play_button"
+            android:background="@drawable/blue_button"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="0dp"
+            android:fontFamily="casual"
+            android:textSize="30sp"/>
+
+        <com.amyhill.simon.ColorButton
+            android:text="Instructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ins_button"
+            android:background="@drawable/green_button"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="casual"
+            android:textSize="30sp"/>
+
+        <com.amyhill.simon.ColorButton
+            android:text="About"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/about_button"
+            android:background="@drawable/red_button"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="casual"
+            android:textSize="30sp"/>
+
+        <com.amyhill.simon.ColorButton
+            android:text="Exit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/exit_button"
+            android:background="@drawable/yellow_button"
+            android:textColor="@color/colorText"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="casual"
+            android:textSize="30sp" />
+    </LinearLayout>
 
 </RelativeLayout>
