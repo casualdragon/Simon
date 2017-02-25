@@ -1,5 +1,6 @@
 package com.amyhill.simon;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -37,9 +38,20 @@ public class GameSelectionActvity extends AppCompatActivity {
     class clickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            int duration = 250;
+            int duration = 50;
             ColorButton button = (ColorButton) v;
             button.flashButton(duration);
+
+            int viewid = v.getId();
+
+            if (viewid == R.id.normal_button) {
+                launchActivity(GameActivity.class);
+            }
+        }
+
+        private void launchActivity(Class<?> activity){
+            Intent intent = new Intent(GameSelectionActvity.this, activity);
+            startActivity(intent);
         }
     }
 

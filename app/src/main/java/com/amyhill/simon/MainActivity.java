@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     class clickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            int duration = 250;
+            int duration = 50;
             ColorButton button = (ColorButton) v;
             button.flashButton(duration);
 

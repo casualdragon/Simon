@@ -22,11 +22,15 @@ public class ColorButton extends Button {
     public ColorButton(Context context) {
         super(context);
         this.context = context;
+        this.baseColor = 0;
+        this.flashColor = 0;
     }
 
     public ColorButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+        this.baseColor = 0;
+        this.flashColor = 0;
     }
 
     //Getters and Setters
@@ -55,8 +59,10 @@ public class ColorButton extends Button {
     }
 
     public void flashButton(int duration){
-        this.duration = duration;
-        new flashButtonTask().execute();
+        if(flashColor != 0 && baseColor != 0) {
+            this.duration = duration;
+            new flashButtonTask().execute();
+        }
     }
 
     public void playSound(int duration){
