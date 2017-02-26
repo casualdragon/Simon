@@ -1,10 +1,18 @@
 package com.amyhill.simon;
 
+import android.os.Handler;
+import android.util.Log;
 import java.util.Random;
 import java.util.Vector;
 
 /**
- * Created by Amy on 2/21/2017.
+ * Public Methods
+ * run() - executes the pattern for the user but does not take input
+ * addTopattern() - adds one number to the current pattern
+ * deletePattern() - erases the vector
+ * check() - used to check if the button pressed is corrected
+ *          *This relies on the buttons position in the array
+ *
  */
 
 public class Game {
@@ -13,11 +21,6 @@ public class Game {
     private Random random;
     private Vector<Integer> pattern;
     private final int SIZE;
-
-    /*
-        true = normal
-        false = extreme
-    */
     private boolean type;
 
     //Constructor
@@ -45,10 +48,19 @@ public class Game {
             runHelper(false);
         }
 
-        //Re-enable onClick for the buttons to take input for the pattern
-        for(int i = 0; i < SIZE; i++){
-            buttons[i].setEnabled(true);
-        }
+        //Used to disable buttons long
+        //enough to play the pattern
+        //Need to work on the timing
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Re-enable onClick for the buttons to take input for the pattern
+                for(int i = 0; i < SIZE; i++){
+                    buttons[i].setEnabled(true);
+                }
+            }
+        }, 250*SIZE*2);
     }
 
     // Adds a random int to the pattern
@@ -61,11 +73,11 @@ public class Game {
         be done in reverse. Used in run()
      */
     private void runHelper(boolean flag){
-
         if(flag) {
             for (int i = 0; i < pattern.size(); i++) {
                 buttons[pattern.get(i)].flashButton(250);
                 buttons[pattern.get(i)].playSound(250);
+                Log.i("=================", i + "");
             }
         }else{
             for (int i = pattern.size()-1; i <=0 ; i--) {
@@ -75,4 +87,15 @@ public class Game {
         }
     }
 
+    public void deletePattern(){
+        pattern.clear();
+        addToPattern();
+    }
+
+    public boolean check(int position, int value){
+        if(pattern.get(position) == value){
+            return true;
+        }
+        return false;
+    }
 }
