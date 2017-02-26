@@ -1,53 +1,98 @@
 package com.amyhill.simon;
 
-import android.media.MediaPlayer;
+import android.content.Context;
 import android.media.SoundPool;
-import android.widget.ImageView;
+import android.os.AsyncTask;
+import android.util.AttributeSet;
+import android.widget.Button;
+
 
 /**
  * Created by Amy on 2/20/2017.
  */
 
-public class ColorButton {
+public class ColorButton extends Button {
     //Fields
-    private ImageView baseColor;
-    private ImageView flashColor;
-    private String sound;
+    private int baseColor;
+    private int flashColor;
+    private int soundID;
+    private int duration;
+    private SoundPool soundPool;
+    Context context;
 
-    ColorButton(ImageView baseColor, ImageView flashColor, String sound){
-        this.baseColor = baseColor;
-        this.flashColor = flashColor;
-        this.sound = sound;
+    public ColorButton(Context context) {
+        super(context);
+        this.context = context;
+        this.baseColor = 0;
+        this.flashColor = 0;
+    }
+
+    public ColorButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        this.baseColor = 0;
+        this.flashColor = 0;
     }
 
     //Getters and Setters
-    public ImageView getBaseColor() {
+    public int getBaseColor() {
         return baseColor;
     }
 
-    public void setBaseColor(ImageView baseColor) {
+    public void setBaseColor(int baseColor) {
         this.baseColor = baseColor;
     }
 
-    public ImageView getFlashColor() {
+    public int getFlashColor() {
         return flashColor;
     }
 
-    public void setFlashColor(ImageView flashColor) {
+    public void setFlashColor(int flashColor) {
         this.flashColor = flashColor;
     }
 
-    public String getSound() {
-        return sound;
+    public int getSound() {
+        return soundID;
     }
 
-    public void setSound(String sound) {
-        this.sound = sound;
+    public void setSound(int sound) {
+        this.soundID = sound;
     }
 
-    //Methods
-    public void playSound(SoundPool soundPool){
-
+    public void flashButton(int duration){
+        if(flashColor != 0 && baseColor != 0) {
+            this.duration = duration;
+            new flashButtonTask().execute();
+        }
     }
 
+    public void playSound(int duration){
+        if(soundPool != null){
+            soundPool.play(soundID,1.0f,1.0f,0,0,1.0f);
+        }
+    }
+
+    class flashButtonTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            publishProgress();
+            try {
+                Thread.sleep(duration);
+            } catch (InterruptedException e) {
+               return null;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            setBackground(context.getDrawable(flashColor));
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            setBackground(context.getDrawable(baseColor));
+        }
+    }
 }

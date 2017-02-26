@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Simon</string>
+    <string name="selectionTitle">Select a Mode</string>
+    <string name="play">Play</string>
+    <string name="instructions">Instructions</string>
+    <string name="about">About</string>
+    <string name="exit">Exit</string>
+    <string name="normal">Normal</string>
+    <string name="colorSwap">Color Swap</string>
+    <string name="colorMatch">Color Match</string>
+    <string name="extreme">Extreme</string>
 </resources>
