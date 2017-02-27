@@ -75,6 +75,11 @@ public class ColorButton extends Button {
     class flashButtonTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(duration);
+            }catch (InterruptedException e){
+                return null;
+            }
             publishProgress();
             try {
                 Thread.sleep(duration);
