@@ -2,8 +2,6 @@ package com.amyhill.simon;
 
 import android.media.SoundPool;
 import android.os.Handler;
-import android.util.Log;
-
 import java.util.Random;
 import java.util.Vector;
 

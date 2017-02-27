@@ -40,13 +40,15 @@ public class GameActivity extends AppCompatActivity {
         midInner.setBaseColor(R.drawable.green_game_button);
         midOuter.setBaseColor(R.drawable.yellow_game_button);
         outer.setBaseColor(R.drawable.red_game_button);
+        fail.setBaseColor(R.drawable.red_game_button);
+        success.setBaseColor(R.drawable.green_game_button);
 
         inner.setFlashColor(R.drawable.blueflash_game_button);
         midInner.setFlashColor(R.drawable.greenflash_game_button);
         midOuter.setFlashColor(R.drawable.yellowflash_game_button);
         outer.setFlashColor(R.drawable.redflash_game_button);
-        fail.setFlashColor(R.drawable.redflash_button);
-        success.setFlashColor(R.drawable.greenflash_button);
+        fail.setFlashColor(R.drawable.redflash_game_button);
+        success.setFlashColor(R.drawable.greenflash_game_button);
 
         playGameClickListener listener = new playGameClickListener();
 
@@ -124,41 +126,30 @@ public class GameActivity extends AppCompatActivity {
         public void onClick(View v){
             ColorButton button = (ColorButton) v;
             flashAndNoise(button);
-            Log.i("================", "User Size: " + patternUser.size());
             if(patternUser.size() == 0) {
                 game.addToPattern();
                 patternAI = game.getPattern();
             }
-            Log.i("================", "AI Size: " + patternAI.size());
             for(int i =0; i < patternAI.size(); i++){
                 Log.i("==================", i+": "+patternAI.get(i));
+            }
+            for(int i = 0; i < highscores.length; i++){
+                Log.i("==============", "highscore"+(i+1)+":"+highscores[i]);
             }
             patternUser.add(button.getID());
             for(int i = 0; i < patternUser.size(); i++){
                 if(patternUser.get(i) != patternAI.get(i)){
-                    //checkHighScore(patternUser.size());
+                    checkHighScore(patternAI.size()-1);
                     patternUser.clear();
                     game.deletePattern();
                     game.addToPattern();
-                    game.run();
+                    run();
                 }
             }
-            if(patternUser.size() == patternAI.size()-1){
-                game.run();
+            if(patternUser.size() == patternAI.size()-1 && patternUser.size() != 0){
+                run();
                 patternUser.clear();
             }
-        }
-    }
-
-    class lostGameClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-
-        }
-
-        private void launchActivity(Class<?> activity) {
-            Intent intent = new Intent(GameActivity.this, activity);
-            startActivity(intent);
         }
     }
 
@@ -172,11 +163,48 @@ public class GameActivity extends AppCompatActivity {
             highscores[2] = highscores[1];
             highscores[1] = highscores [0];
             highscores[0] = value;
-        }else if(value > highscores[1]){
+        }else if(value > highscores[1]) {
             highscores[2] = highscores[1];
             highscores[1] = value;
-        }else if(value > highscores[3]){
+        }else if(value > highscores[2]){
             highscores[2] = value;
+        }
+    }
+
+    private void run(){
+        //Disable onClick for the buttons to display the pattern
+        for(int i = 0; i < color.length; i++){
+            color[i].setEnabled(false);
+        }
+
+        Handler handler = new Handler();
+        //Play the pattern
+        runHelper(true);
+
+        //Used to disable buttons long
+        //enough to play the pattern
+        //Need to work on the timing
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Re-enable onClick for the buttons to take input for the pattern
+                for(int i = 0; i < color.length; i++){
+                    color[i].setEnabled(true);
+                }
+            }
+        }, 250*color.length*2);
+    }
+    private void runHelper(boolean flag){
+
+        if(flag) {
+            for (int i = 0; i < patternAI.size(); i++) {
+                flashAndNoise(color[(int)patternAI.get(i)]);
+            }
+        }else{
+            for (int i = patternAI.size()-1; i <=0 ; i--) {
+                flashAndNoise(color[(int)patternAI.get(i)]);
+            }
         }
     }
 }
