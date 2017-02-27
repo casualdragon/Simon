@@ -1,10 +1,10 @@
 package com.amyhill.simon;
 
 import android.content.Context;
-import android.media.SoundPool;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.Button;
 
 
@@ -20,6 +20,7 @@ public class ColorButton extends Button {
     private int duration;
     Context context;
     private int id;
+    private int radius;
 
     public ColorButton(Context context) {
         super(context);
@@ -41,7 +42,7 @@ public class ColorButton extends Button {
     }
 
     public void setBaseColor(int baseColor) {
-        this.baseColor = baseColor;
+        this.baseColor = ContextCompat.getColor(context, baseColor);
     }
 
     public int getFlashColor() {
@@ -49,7 +50,7 @@ public class ColorButton extends Button {
     }
 
     public void setFlashColor(int flashColor) {
-        this.flashColor = flashColor;
+        this.flashColor = ContextCompat.getColor(context, flashColor);
     }
 
     public int getSound() {
@@ -63,6 +64,16 @@ public class ColorButton extends Button {
     public void setId(int id){this.id = id;}
 
     public int getID(){return id;}
+    
+    public void setUpButton(int baseColor, int flashColor, OnClickListener listener, int radius){
+        this.baseColor = ContextCompat.getColor(context, baseColor);
+        this.flashColor = ContextCompat.getColor(context, flashColor);
+        this.radius = radius;
+        this.setOnClickListener(listener);
+        generateBackground(false);
+    }
+    
+    
 
     public void flashButton(int duration){
         if(flashColor != 0 && baseColor != 0) {
@@ -70,6 +81,19 @@ public class ColorButton extends Button {
             new flashButtonTask().execute();
         }
     }
+    
+    private void generateBackground(boolean isFlashColor) {
+        GradientDrawable background = new GradientDrawable();
+        background.setStroke(10, ContextCompat.getColor(context, R.color.colorPrimaryDark));
+        background.setCornerRadius(radius);
+        if (isFlashColor) {
+            background.setColor(flashColor);
+        } else {
+            background.setColor(baseColor);
+        }
+        setBackground(background);
+    }
+    
 
 
     class flashButtonTask extends AsyncTask<Void, Void, Void> {
@@ -92,12 +116,12 @@ public class ColorButton extends Button {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            setBackground(context.getDrawable(flashColor));
+            generateBackground(true);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            setBackground(context.getDrawable(baseColor));
+            generateBackground(false);
         }
     }
 }
