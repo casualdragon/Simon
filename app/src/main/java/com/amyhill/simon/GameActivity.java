@@ -13,6 +13,8 @@ import android.view.View;
 import java.util.Vector;
 
 public class GameActivity extends AppCompatActivity {
+    public enum GameType {NORMAL, COLOR, POSITION, EXTREME}
+
     private Game game;
     private int [] highscores = new int []{0,0,0};
     private final String HIGHSCORE = "HIGHSCORE";
@@ -36,26 +38,14 @@ public class GameActivity extends AppCompatActivity {
         ColorButton fail =  (ColorButton)findViewById(R.id.fail_button);
         ColorButton success = (ColorButton) findViewById(R.id.success_button);
 
-        inner.setBaseColor(R.drawable.blue_game_button);
-        midInner.setBaseColor(R.drawable.green_game_button);
-        midOuter.setBaseColor(R.drawable.yellow_game_button);
-        outer.setBaseColor(R.drawable.red_game_button);
-        fail.setBaseColor(R.drawable.red_game_button);
-        success.setBaseColor(R.drawable.green_game_button);
-
-        inner.setFlashColor(R.drawable.blueflash_game_button);
-        midInner.setFlashColor(R.drawable.greenflash_game_button);
-        midOuter.setFlashColor(R.drawable.yellowflash_game_button);
-        outer.setFlashColor(R.drawable.redflash_game_button);
-        fail.setFlashColor(R.drawable.redflash_game_button);
-        success.setFlashColor(R.drawable.greenflash_game_button);
-
         playGameClickListener listener = new playGameClickListener();
 
-        inner.setOnClickListener(listener);
-        midInner.setOnClickListener(listener);
-        midOuter.setOnClickListener(listener);
-        outer.setOnClickListener(listener);
+        int radius = 10;
+
+        inner.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
+        midInner.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
+        midOuter.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
+        outer.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
 
         color = new ColorButton[] {inner, midInner, midOuter, outer};
 
@@ -114,6 +104,7 @@ public class GameActivity extends AppCompatActivity {
         midInner.setSound(soundPool.load(this, R.raw.c_piano, 1));
         midOuter.setSound(soundPool.load(this, R.raw.f_sharp_piano, 1));
         outer.setSound(soundPool.load(this, R.raw.g_piano, 1));
+
     }
     public void playSound(ColorButton button){
         if(soundPool != null) {
@@ -125,6 +116,7 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void onClick(View v){
             ColorButton button = (ColorButton) v;
+
             flashAndNoise(button);
             if(patternUser.size() == 0) {
                 game.addToPattern();
@@ -156,8 +148,9 @@ public class GameActivity extends AppCompatActivity {
     private void flashAndNoise(ColorButton button){
         int duration = 250;
         button.flashButton(duration);
-        soundPool.play(button.getSound(),1.0f,1.0f,0,0,1.0f);
+        playSound(button);
     }
+
     private void checkHighScore(int value){
         if(value > highscores[0]){
             highscores[2] = highscores[1];
