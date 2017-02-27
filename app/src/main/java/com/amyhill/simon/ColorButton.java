@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.Button;
 
 
@@ -17,8 +18,8 @@ public class ColorButton extends Button {
     private int flashColor;
     private int soundID;
     private int duration;
-    private SoundPool soundPool;
     Context context;
+    private int id;
 
     public ColorButton(Context context) {
         super(context);
@@ -59,6 +60,10 @@ public class ColorButton extends Button {
         this.soundID = sound;
     }
 
+    public void setId(int id){this.id = id;}
+
+    public int getID(){return id;}
+
     public void flashButton(int duration){
         if(flashColor != 0 && baseColor != 0) {
             this.duration = duration;
@@ -66,15 +71,15 @@ public class ColorButton extends Button {
         }
     }
 
-    public void playSound(int duration){
-        if(soundPool != null){
-            soundPool.play(soundID,1.0f,1.0f,0,0,1.0f);
-        }
-    }
 
     class flashButtonTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(duration);
+            }catch (InterruptedException e){
+                return null;
+            }
             publishProgress();
             try {
                 Thread.sleep(duration);

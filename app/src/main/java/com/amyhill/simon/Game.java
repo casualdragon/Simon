@@ -1,7 +1,7 @@
 package com.amyhill.simon;
 
+import android.media.SoundPool;
 import android.os.Handler;
-import android.util.Log;
 import java.util.Random;
 import java.util.Vector;
 
@@ -17,14 +17,16 @@ import java.util.Vector;
 
 public class Game {
     //Fields
-    private ColorButton [] buttons = new ColorButton[4];
+
     private Random random;
     private Vector<Integer> pattern;
     private final int SIZE;
+    private ColorButton [] buttons = new ColorButton[4];
     private boolean type;
+    private SoundPool soundPool;
 
     //Constructor
-    Game(ColorButton [] buttons, int size, boolean type){
+    Game(ColorButton [] buttons, int size, boolean type, SoundPool soundPool){
         SIZE = size;
         for(int i = 0; i < SIZE; i++) {
             this.buttons[i] = buttons[i];
@@ -33,7 +35,10 @@ public class Game {
         random = new Random();
         pattern = new Vector<>(100);
         pattern.add(random.nextInt(SIZE));
+        this.soundPool = soundPool;
     }
+
+    public Vector getPattern(){return pattern;}
 
     public void run(){
         //Disable onClick for the buttons to display the pattern
@@ -41,17 +46,14 @@ public class Game {
             buttons[i].setEnabled(false);
         }
 
+        Handler handler = new Handler();
         //Play the pattern
-        if(type){
-            runHelper(true);
-        }else{
-            runHelper(false);
-        }
+        runHelper(type);
 
         //Used to disable buttons long
         //enough to play the pattern
         //Need to work on the timing
-        Handler handler = new Handler();
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -73,29 +75,39 @@ public class Game {
         be done in reverse. Used in run()
      */
     private void runHelper(boolean flag){
+        GameActivity gameActivity = new GameActivity();
+
         if(flag) {
             for (int i = 0; i < pattern.size(); i++) {
                 buttons[pattern.get(i)].flashButton(250);
-                buttons[pattern.get(i)].playSound(250);
-                Log.i("=================", i + "");
+                //gameActivity.playSound(buttons[i]);
+
             }
         }else{
             for (int i = pattern.size()-1; i <=0 ; i--) {
                 buttons[pattern.get(i)].flashButton(250);
-                buttons[pattern.get(i)].playSound(250);
+                gameActivity.playSound(buttons[i]);
             }
         }
     }
 
+
     public void deletePattern(){
-        pattern.clear();
-        addToPattern();
+        if(!pattern.isEmpty()) {
+            pattern.clear();
+        }
     }
 
-    public boolean check(int position, int value){
-        if(pattern.get(position) == value){
+    public boolean check(int value, int counter){
+        if(pattern.size()-1 == counter) {
+            addToPattern();
+        }
+        if (pattern.get(counter%4) == value) {
+            counter++;
             return true;
         }
+        deletePattern();
         return false;
     }
+
 }
