@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import java.util.Vector;
@@ -123,19 +124,28 @@ public class GameActivity extends AppCompatActivity {
         public void onClick(View v){
             ColorButton button = (ColorButton) v;
             flashAndNoise(button);
-            game.addToPattern();
-            patternAI = game.getPattern();
+            Log.i("================", "User Size: " + patternUser.size());
+            if(patternUser.size() == 0) {
+                game.addToPattern();
+                patternAI = game.getPattern();
+            }
+            Log.i("================", "AI Size: " + patternAI.size());
+            for(int i =0; i < patternAI.size(); i++){
+                Log.i("==================", i+": "+patternAI.get(i));
+            }
             patternUser.add(button.getID());
             for(int i = 0; i < patternUser.size(); i++){
                 if(patternUser.get(i) != patternAI.get(i)){
                     //checkHighScore(patternUser.size());
                     patternUser.clear();
                     game.deletePattern();
+                    game.addToPattern();
                     game.run();
                 }
             }
             if(patternUser.size() == patternAI.size()-1){
                 game.run();
+                patternUser.clear();
             }
         }
     }

@@ -82,7 +82,7 @@ public class Game {
         if(flag) {
             for (int i = 0; i < pattern.size(); i++) {
                 buttons[pattern.get(i)].flashButton(250);
-                gameActivity.playSound(buttons[i]);
+                //gameActivity.playSound(buttons[i]);
 
             }
         }else{
@@ -96,9 +96,8 @@ public class Game {
 
     public void deletePattern(){
         if(!pattern.isEmpty()) {
-            pattern.removeAllElements();
+            pattern.clear();
         }
-        addToPattern();
     }
 
     public boolean check(int value, int counter){
