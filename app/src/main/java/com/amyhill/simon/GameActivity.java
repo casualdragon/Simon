@@ -80,6 +80,7 @@ public class GameActivity extends AppCompatActivity {
             }
             fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
             success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
+
             duration = 50;
         } else if (gameType == GameType.COLOR) {
 
@@ -103,6 +104,10 @@ public class GameActivity extends AppCompatActivity {
         }
 
         game = new Game(color, 4, true, soundPool, duration);
+
+        if(gameType == GameType.EXTREME){
+            game.setReverse(true);
+        }
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -173,7 +178,7 @@ public class GameActivity extends AppCompatActivity {
     class playGameClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v){
-            boolean flag = true;
+            boolean doesSuccessFlash = true;
             ColorButton button = (ColorButton) v;
 
             button.pokeButton(duration);
@@ -193,19 +198,22 @@ public class GameActivity extends AppCompatActivity {
                 if(patternUser.get(i) != patternAI.get(i)){
                     checkHighScore(patternAI.size()-1);
                     patternUser.clear();
-                    ((ColorButton) findViewById(R.id.fail_button)).pokeButton(duration);
                     game.deletePattern();
                     fail.pokeButton(duration);
                     game.addToPattern();
                     game.run();
+                    game.toggleButtons(false);
+                    return;
                 }
             }
             if(patternUser.size() == patternAI.size()-1 && patternUser.size() != 0){
-                if(flag) {
+                if(doesSuccessFlash) {
                     success.pokeButton(duration);
                 }
                 game.run();
                 patternUser.clear();
+                game.toggleButtons(false);
+                return;
             }
 
         }
