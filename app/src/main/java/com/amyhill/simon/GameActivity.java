@@ -26,14 +26,15 @@ public class GameActivity extends AppCompatActivity {
 
     int duration;
     int radius;
+
     private SoundPool soundPool;
     private Game game;
     private GameType gameType;
-    private int [] highscores = new int []{0,0,0};
     private ColorButton [] color;
     private Vector patternAI;
     private Vector <Integer> patternUser = new Vector<Integer>(100);
-    GameType gameType;
+
+    private int [] highscores = new int []{0,0,0};
     private int [] baseColor = {R.color.colorBlue, R.color.colorGreen, R.color.colorYellow, R.color.colorRed};
     private int [] flashColor = {R.color.colorBlueFlash, R.color.colorGreenFlash, R.color.colorYellowFlash, R.color.colorRedFLash};
     private ColorButton fail;
@@ -48,7 +49,7 @@ public class GameActivity extends AppCompatActivity {
 
 
         //Gets the gamemode from the intent.
-        if(getIntent().hasExtra(MODE_NAME)) {
+        if (getIntent().hasExtra(MODE_NAME)) {
             gameType = (GameType) getIntent().getSerializableExtra(MODE_NAME);
         } else {
             gameType = GameType.NORMAL;
@@ -60,66 +61,67 @@ public class GameActivity extends AppCompatActivity {
         ColorButton midInner = (ColorButton) findViewById(R.id.green_game_button);
         ColorButton midOuter = (ColorButton) findViewById(R.id.yellow_game_button);
         ColorButton outer = (ColorButton) findViewById(R.id.red_game_button);
-        fail =  (ColorButton)findViewById(R.id.fail_button);
+        fail = (ColorButton) findViewById(R.id.fail_button);
         success = (ColorButton) findViewById(R.id.success_button);
 
         playGameClickListener listener = new playGameClickListener();
         radius = 10;
         duration = 250;
-        color = new ColorButton[] {inner, midInner, midOuter, outer};
+        color = new ColorButton[]{inner, midInner, midOuter, outer};
 
 
         fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
 
-        if(gameType == GameType.EXTREME){
-            for(int i = 0; i < color.length; i++){
-                color[i].setUpButton(baseColor[3],flashColor[3], listener, radius);
+        if (gameType == GameType.EXTREME) {
+            for (int i = 0; i < color.length; i++) {
+                color[i].setUpButton(baseColor[3], flashColor[3], listener, radius);
             }
             success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
             fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-        } else if(gameType == GameType.COLOR){
+        } else if (gameType == GameType.COLOR) {
 
 
+            //Sets buttons for extreme or normal mode.
+            if (gameType == GameType.EXTREME) {
+                for (int i = 0; i < color.length; i++) {
+                    color[i].setUpButton(baseColor[3], flashColor[3], listener, radius);
+                }
+                fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+                success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
+                duration = 50;
+            } else if (gameType == GameType.COLOR) {
 
-        //Sets buttons for extreme or normal mode.
-        if(gameType == GameType.EXTREME){
-            for(int i = 0; i < color.length; i++){
-                color[i].setUpButton(baseColor[3],flashColor[3], listener, radius);
+            } else if (gameType == GameType.POSITION) {
+
+            } else {
+                for (int i = 0; i < color.length; i++) {
+                    color[i].setUpButton(baseColor[i], flashColor[i], listener, radius);
+                }
+                fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+                success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
+
             }
-            fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-            success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
-            duration = 50;
-        } else if (gameType == GameType.COLOR){
 
-        } else if(gameType == GameType.POSITION){
+            startSoundPool();
 
-        }else{
-            for(int i = 0; i < color.length; i++){
-                color[i].setUpButton(baseColor[i],flashColor[i], listener, radius);
+            for (int i = 0; i < 4; i++) {
+                color[i].setEnabled(false);
+                color[i].setId(i);
+                color[i].setSoundPool(soundPool);
             }
-            fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-            success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
+
+            game = new Game(color, 4, true, soundPool, duration);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    game.run();
+                }
+            }, 1250);
+
 
         }
-
-        startSoundPool();
-
-        for(int i = 0; i < 4; i++){
-            color[i].setEnabled(false);
-            color[i].setId(i);
-            color[i].setSoundPool(soundPool);
-        }
-
-        game = new Game(color, 4, true, soundPool, duration);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                game.run();
-            }
-        }, 1250);
-
 
     }
 
@@ -203,14 +205,14 @@ public class GameActivity extends AppCompatActivity {
                     patternUser.clear();
                     ((ColorButton) findViewById(R.id.fail_button)).pokeButton(duration);
                     game.deletePattern();
-                    flashAndNoise(fail);
+                    fail.pokeButton(duration);
                     game.addToPattern();
                     game.run();
                 }
             }
             if(patternUser.size() == patternAI.size()-1 && patternUser.size() != 0){
                 if(flag) {
-                    flashAndNoise(success);
+                    success.pokeButton(duration);
                 }
                 game.run();
                 patternUser.clear();
