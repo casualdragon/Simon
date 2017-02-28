@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 public class GameSelectionActvity extends AppCompatActivity {
+    private GameActivity.GameType gameType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,22 +18,13 @@ public class GameSelectionActvity extends AppCompatActivity {
         ColorButton swap = (ColorButton) findViewById(R.id.swap_button);
         ColorButton extreme = (ColorButton) findViewById(R.id.extreme_button);
 
-        normal.setBaseColor(R.drawable.blue_button);
-        match.setBaseColor(R.drawable.green_button);
-        swap.setBaseColor(R.drawable.yellow_button);
-        extreme.setBaseColor(R.drawable.red_button);
-
-        normal.setFlashColor(R.drawable.blueflash_button);
-        match.setFlashColor(R.drawable.greenflash_button);
-        swap.setFlashColor(R.drawable.yellowflash_button);
-        extreme.setFlashColor(R.drawable.redflash_button);
+        int radius = 100;
 
         clickListener listener = new clickListener();
-
-        normal.setOnClickListener(listener);
-        match.setOnClickListener(listener);
-        swap.setOnClickListener(listener);
-        extreme.setOnClickListener(listener);
+        normal.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
+        match.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
+        swap.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
+        extreme.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
     }
 
     class clickListener implements View.OnClickListener{
@@ -44,13 +36,24 @@ public class GameSelectionActvity extends AppCompatActivity {
 
             int viewid = v.getId();
 
-            if (viewid == R.id.normal_button) {
-                launchActivity(GameActivity.class);
+            if(button.getId() == R.id.match_button){
+                gameType = GameActivity.GameType.COLOR;
+            } else if(button.getId() == R.id.swap_button){
+                gameType = GameActivity.GameType.POSITION;
+            } else if(button.getId() == R.id.extreme_button){
+                gameType = GameActivity.GameType.EXTREME;
+            } else {
+                gameType = GameActivity.GameType.NORMAL;
             }
+
+
+            launchActivity(GameActivity.class);
+
         }
 
         private void launchActivity(Class<?> activity){
             Intent intent = new Intent(GameSelectionActvity.this, activity);
+            intent.putExtra(GameActivity.MODE_NAME, gameType);
             startActivity(intent);
         }
     }

@@ -9,59 +9,48 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/red_game_button"
-        android:background="@drawable/red_game_button"
         android:layout_width="375dp"
         android:layout_height="375dp"
         android:stateListAnimator="@null"/>
 
     <com.amyhill.simon.ColorButton
-        app:srcCompat="@drawable/yellow_game_button"
         android:id="@+id/yellow_game_button"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_width="275dp"
         android:layout_height="275dp"
-        android:background="@drawable/yellow_game_button"
         android:stateListAnimator="@null" />
 
     <com.amyhill.simon.ColorButton
-        app:srcCompat="@drawable/green_game_button"
         android:id="@+id/green_game_button"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_width="175dp"
         android:layout_height="175dp"
-        android:background="@drawable/green_game_button"
         android:stateListAnimator="@null"  />
 
     <com.amyhill.simon.ColorButton
-        app:srcCompat="@drawable/blue_game_button"
         android:id="@+id/blue_game_button"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:background="@drawable/blue_game_button"
         android:stateListAnimator="@null"  />
 
     <com.amyhill.simon.ColorButton
         android:layout_width="375dp"
-        app:srcCompat="@drawable/green_game_button"
         android:layout_above="@+id/red_game_button"
         android:layout_centerHorizontal="true"
         android:id="@+id/success_button"
         android:layout_height="100dp"
-        android:background="@drawable/green_game_button"
         android:stateListAnimator="@null" />
 
     <com.amyhill.simon.ColorButton
         android:layout_width="375dp"
-        app:srcCompat="@drawable/red_game_button"
         android:layout_below="@+id/red_game_button"
         android:layout_centerHorizontal="true"
         android:id="@+id/fail_button"
         android:layout_height="100dp"
-        android:background="@drawable/red_game_button"
         android:stateListAnimator="@null"  />
 
 </RelativeLayout>

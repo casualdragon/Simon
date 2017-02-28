@@ -21,22 +21,14 @@ public class MainActivity extends AppCompatActivity {
         ColorButton about = (ColorButton) findViewById(R.id.about_button);
         ColorButton exit = (ColorButton) findViewById(R.id.exit_button);
 
-        play.setBaseColor(R.drawable.blue_button);
-        ins.setBaseColor(R.drawable.green_button);
-        about.setBaseColor(R.drawable.yellow_button);
-        exit.setBaseColor(R.drawable.red_button);
-
-        play.setFlashColor(R.drawable.blueflash_button);
-        ins.setFlashColor(R.drawable.greenflash_button);
-        about.setFlashColor(R.drawable.yellowflash_button);
-        exit.setFlashColor(R.drawable.redflash_button);
-
         clickListener listener = new clickListener();
 
-        play.setOnClickListener(listener);
-        ins.setOnClickListener(listener);
-        about.setOnClickListener(listener);
-        exit.setOnClickListener(listener);
+        int radius = 100;
+
+        play.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
+        ins.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
+        about.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
+        exit.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
     }
 
     class clickListener implements View.OnClickListener{
