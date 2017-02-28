@@ -119,7 +119,7 @@
                 android:gravity="center" />
 
             <TextView
-                android:text="This version gets increasingly faster and the pattern is reversed"
+                android:text="This version gets slightly faster and the pattern is reversed"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
