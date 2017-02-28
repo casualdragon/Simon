@@ -32,7 +32,7 @@ public class GameSelectionActvity extends AppCompatActivity {
         public void onClick(View v) {
             int duration = 50;
             ColorButton button = (ColorButton) v;
-            button.flashButton(duration);
+            button.pokeButton(duration);
 
             int viewid = v.getId();
 
