@@ -1,13 +1,9 @@
 package com.amyhill.simon;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             int duration = 50;
             ColorButton button = (ColorButton) v;
-            button.flashButton(duration);
+            button.pokeButton(duration);
 
             int viewid = v.getId();
 
