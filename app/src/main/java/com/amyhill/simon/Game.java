@@ -25,7 +25,6 @@ public class Game {
     private Random random;
     private Vector<Integer> pattern;
     private ColorButton [] buttons = new ColorButton[4];
-    private boolean isReverse;
 
 
     //Constructor
