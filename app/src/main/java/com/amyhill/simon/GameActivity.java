@@ -13,6 +13,7 @@ import android.view.View;
 import java.util.Vector;
 
 public class GameActivity extends AppCompatActivity {
+    public static String MODE_NAME = "MODE_NAME";
     public enum GameType {NORMAL, COLOR, POSITION, EXTREME}
 
     private Game game;
@@ -22,12 +23,17 @@ public class GameActivity extends AppCompatActivity {
     private ColorButton [] color;
     private Vector patternAI;
     private Vector <Integer> patternUser = new Vector<Integer>(100);
+    GameType gameType;
     private int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acivity_game);
+
+        if(getIntent().hasExtra(MODE_NAME)) {
+            gameType = (GameType) getIntent().getSerializableExtra(MODE_NAME);
+        }
 
         counter = 1;
 
@@ -42,17 +48,45 @@ public class GameActivity extends AppCompatActivity {
 
         int radius = 10;
 
-        inner.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
-        midInner.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
-        midOuter.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
-        outer.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+
+        success.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+
+        if(gameType == GameType.EXTREME){
+            inner.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+            midInner.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+            midOuter.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+            outer.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+            fail.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
+        } else {
+            inner.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
+            midInner.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
+            midOuter.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
+            outer.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+            fail.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
+        }
 
         color = new ColorButton[] {inner, midInner, midOuter, outer};
 
-        for(int i = 0; i < 4; i++){
-            color[i].setEnabled(false);
-            color[i].setId(i);
-        }
+        AudioAttributes.Builder builder = new AudioAttributes.Builder();
+        builder.setUsage(AudioAttributes.USAGE_GAME);
+
+        SoundPool.Builder spbuilder = new SoundPool.Builder();
+        spbuilder.setAudioAttributes(builder.build());
+        spbuilder.setMaxStreams(10);
+        soundPool = spbuilder.build();
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                if(status == 0){
+                }
+            }
+        });
+
+        inner.setSound(soundPool.load(this, R.raw.a_piano, 1));
+        midInner.setSound(soundPool.load(this, R.raw.c_piano, 1));
+        midOuter.setSound(soundPool.load(this, R.raw.f_sharp_piano, 1));
+        outer.setSound(soundPool.load(this, R.raw.g_piano, 1));
+
         game = new Game(color, 4, true, soundPool);
 
         Handler handler = new Handler();
@@ -62,6 +96,12 @@ public class GameActivity extends AppCompatActivity {
                 game.run();
             }
         }, 1250);
+
+        for(int i = 0; i < 4; i++){
+            color[i].setEnabled(false);
+            color[i].setId(i);
+            color[i].setSoundPool(soundPool);
+        }
     }
 
     @Override
@@ -135,11 +175,11 @@ public class GameActivity extends AppCompatActivity {
                     patternUser.clear();
                     game.deletePattern();
                     game.addToPattern();
-                    run();
+                    game.run();
                 }
             }
             if(patternUser.size() == patternAI.size()-1 && patternUser.size() != 0){
-                run();
+                game.run();
                 patternUser.clear();
             }
         }
@@ -164,30 +204,30 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void run(){
-        //Disable onClick for the buttons to display the pattern
-        for(int i = 0; i < color.length; i++){
-            color[i].setEnabled(false);
-        }
-
-        Handler handler = new Handler();
-        //Play the pattern
-        runHelper(true);
-
-        //Used to disable buttons long
-        //enough to play the pattern
-        //Need to work on the timing
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Re-enable onClick for the buttons to take input for the pattern
-                for(int i = 0; i < color.length; i++){
-                    color[i].setEnabled(true);
-                }
-            }
-        }, 250*color.length*2);
-    }
+//    private void run(){
+//        //Disable onClick for the buttons to display the pattern
+//        for(int i = 0; i < color.length; i++){
+//            color[i].setEnabled(false);
+//        }
+//
+//        Handler handler = new Handler();
+//        //Play the pattern
+//        runHelper(true);
+//
+//        //Used to disable buttons long
+//        //enough to play the pattern
+//        //Need to work on the timing
+//
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                //Re-enable onClick for the buttons to take input for the pattern
+//                for(int i = 0; i < color.length; i++){
+//                    color[i].setEnabled(true);
+//                }
+//            }
+//        }, 250*color.length*2);
+//    }
     private void runHelper(boolean flag){
 
         if(flag) {

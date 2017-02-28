@@ -2,6 +2,7 @@ package com.amyhill.simon;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -21,12 +22,15 @@ public class ColorButton extends Button {
     Context context;
     private int id;
     private int radius;
+    private SoundPool soundPool;
+    private boolean makesSound;
 
     public ColorButton(Context context) {
         super(context);
         this.context = context;
         this.baseColor = 0;
         this.flashColor = 0;
+        makesSound = false;
     }
 
     public ColorButton(Context context, AttributeSet attrs) {
@@ -34,6 +38,7 @@ public class ColorButton extends Button {
         this.context = context;
         this.baseColor = 0;
         this.flashColor = 0;
+        makesSound = false;
     }
 
     //Getters and Setters
@@ -52,6 +57,9 @@ public class ColorButton extends Button {
     public void setFlashColor(int flashColor) {
         this.flashColor = ContextCompat.getColor(context, flashColor);
     }
+
+    public void setSoundPool(SoundPool sp){this.soundPool = sp; makesSound = true;}
+
 
     public int getSound() {
         return soundID;
@@ -99,11 +107,6 @@ public class ColorButton extends Button {
     class flashButtonTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            try {
-                Thread.sleep(duration);
-            }catch (InterruptedException e){
-                return null;
-            }
             publishProgress();
             try {
                 Thread.sleep(duration);
@@ -117,6 +120,9 @@ public class ColorButton extends Button {
         @Override
         protected void onProgressUpdate(Void... values) {
             generateBackground(true);
+            if(makesSound) {
+                soundPool.play(getSound(), .5f, 1.0f, 0, 0, 1.0f);
+            }
         }
 
         @Override

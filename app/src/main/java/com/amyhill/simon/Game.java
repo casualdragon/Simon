@@ -1,6 +1,7 @@
 package com.amyhill.simon;
 
 import android.media.SoundPool;
+import android.os.AsyncTask;
 import android.os.Handler;
 import java.util.Random;
 import java.util.Vector;
@@ -24,6 +25,7 @@ public class Game {
     private ColorButton [] buttons = new ColorButton[4];
     private boolean type;
     private SoundPool soundPool;
+    private boolean isReverse;
 
     //Constructor
     Game(ColorButton [] buttons, int size, boolean type, SoundPool soundPool){
@@ -36,6 +38,7 @@ public class Game {
         pattern = new Vector<>(100);
         pattern.add(random.nextInt(SIZE));
         this.soundPool = soundPool;
+        isReverse = false;
     }
 
     public Vector getPattern(){return pattern;}
@@ -46,23 +49,25 @@ public class Game {
             buttons[i].setEnabled(false);
         }
 
-        Handler handler = new Handler();
+        new testAsync().execute();
+
+//        Handler handler = new Handler();
         //Play the pattern
-        runHelper(type);
+//        runHelper(type);
 
         //Used to disable buttons long
         //enough to play the pattern
         //Need to work on the timing
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Re-enable onClick for the buttons to take input for the pattern
-                for(int i = 0; i < SIZE; i++){
-                    buttons[i].setEnabled(true);
-                }
-            }
-        }, 250*SIZE*2);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                //Re-enable onClick for the buttons to take input for the pattern
+//                for(int i = 0; i < SIZE; i++){
+//                    buttons[i].setEnabled(true);
+//                }
+//            }
+//        }, 250*SIZE*2);
     }
 
     // Adds a random int to the pattern
@@ -108,6 +113,54 @@ public class Game {
         }
         deletePattern();
         return false;
+    }
+
+    class testAsync extends AsyncTask<Void, Integer, Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if(!isReverse) {
+                for (int i = 0; i < pattern.size(); i++) {
+                    publishProgress(pattern.get(i));
+                    try {
+                        Thread.sleep(250);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }else{
+                for (int i = pattern.size()-1; i >= 0 ; i--) {
+                    publishProgress(pattern.get(i));
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            toggleButtons(false);
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            buttons[values[0]].flashButton(250);
+//            soundPool.play(buttons[values[0]].getSound(), 1.0f, 1.0f, 0, 0, 1.0f);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            toggleButtons(true);
+        }
+
+        private void toggleButtons(boolean enabled) {
+            for (int i = 0; i < SIZE; i++) {
+                buttons[i].setEnabled(enabled);
+            }
+        }
     }
 
 }

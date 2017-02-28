@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 public class GameSelectionActvity extends AppCompatActivity {
+    private GameActivity.GameType gameType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +36,24 @@ public class GameSelectionActvity extends AppCompatActivity {
 
             int viewid = v.getId();
 
-            if (viewid == R.id.normal_button) {
-                launchActivity(GameActivity.class);
+            if(button.getId() == R.id.match_button){
+                gameType = GameActivity.GameType.COLOR;
+            } else if(button.getId() == R.id.swap_button){
+                gameType = GameActivity.GameType.POSITION;
+            } else if(button.getId() == R.id.extreme_button){
+                gameType = GameActivity.GameType.EXTREME;
+            } else {
+                gameType = GameActivity.GameType.NORMAL;
             }
+
+
+            launchActivity(GameActivity.class);
+
         }
 
         private void launchActivity(Class<?> activity){
             Intent intent = new Intent(GameSelectionActvity.this, activity);
+            intent.putExtra(GameActivity.MODE_NAME, gameType);
             startActivity(intent);
         }
     }
