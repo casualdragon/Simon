@@ -4,7 +4,6 @@ import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
-
 import java.util.Random;
 import java.util.Vector;
 
@@ -26,6 +25,7 @@ public class Game {
     private Random random;
     private Vector<Integer> pattern;
     private ColorButton [] buttons = new ColorButton[4];
+    private boolean isReverse;
 
 
     //Constructor
@@ -41,8 +41,6 @@ public class Game {
         this.duration = duration;
     }
 
-    public Vector getPattern(){return pattern;}
-
     public void run(){
         //Starts Async Task that plays pattern
 
@@ -54,10 +52,12 @@ public class Game {
             }
         }, 500);
 
+        new PatternPlayer().execute();
+
     }
 
     // Adds a random int to the pattern
-    public void addToPattern(){
+    public void addToPattern() {
         pattern.add(random.nextInt(SIZE));
     }
 
@@ -67,16 +67,8 @@ public class Game {
         }
     }
 
-    public boolean check(int value, int counter){
-        if(pattern.size()-1 == counter) {
-            addToPattern();
-        }
-        if (pattern.get(counter%4) == value) {
-            counter++;
-            return true;
-        }
-        deletePattern();
-        return false;
+    public Vector<Integer> getPattern() {
+        return pattern;
     }
 
     private class PatternPlayer extends AsyncTask<Void, Integer, Void>{
