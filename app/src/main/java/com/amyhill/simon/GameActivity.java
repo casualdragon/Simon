@@ -1,15 +1,19 @@
 package com.amyhill.simon;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
 import android.os.PersistableBundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Random;
 import java.util.Vector;
 
 public class GameActivity extends AppCompatActivity {
@@ -24,7 +28,11 @@ public class GameActivity extends AppCompatActivity {
     private Vector patternAI;
     private Vector <Integer> patternUser = new Vector<Integer>(100);
     GameType gameType;
-    private int counter;
+    private int [] baseColor = {R.color.colorBlue, R.color.colorGreen, R.color.colorYellow, R.color.colorRed};
+    private int [] flashColor = {R.color.colorBlueFlash, R.color.colorGreenFlash, R.color.colorYellowFlash, R.color.colorRedFLash};
+    private ColorButton fail;
+    private ColorButton success;
+    private Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,37 +43,39 @@ public class GameActivity extends AppCompatActivity {
             gameType = (GameType) getIntent().getSerializableExtra(MODE_NAME);
         }
 
-        counter = 1;
 
         ColorButton inner = (ColorButton) findViewById(R.id.blue_game_button);
         ColorButton midInner = (ColorButton) findViewById(R.id.green_game_button);
         ColorButton midOuter = (ColorButton) findViewById(R.id.yellow_game_button);
         ColorButton outer = (ColorButton) findViewById(R.id.red_game_button);
-        ColorButton fail =  (ColorButton)findViewById(R.id.fail_button);
-        ColorButton success = (ColorButton) findViewById(R.id.success_button);
+        fail =  (ColorButton)findViewById(R.id.fail_button);
+        success = (ColorButton) findViewById(R.id.success_button);
 
         playGameClickListener listener = new playGameClickListener();
+        color = new ColorButton[] {inner, midInner, midOuter, outer};
 
         int radius = 10;
 
-
-        success.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-
         if(gameType == GameType.EXTREME){
-            inner.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
-            midInner.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
-            midOuter.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
-            outer.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
-            fail.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
-        } else {
-            inner.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
-            midInner.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
-            midOuter.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
-            outer.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
-            fail.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
+            for(int i = 0; i < color.length; i++){
+                color[i].setUpButton(baseColor[3],flashColor[3], listener, radius);
+            }
+            success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
+            fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+        } else if(gameType == GameType.COLOR){
+
+        } else if(gameType == GameType.POSITION){
+
+        }else{
+            for(int i = 0; i < color.length; i++){
+                color[i].setUpButton(baseColor[i],flashColor[i], listener, radius);
+            }
+            fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+            success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
         }
 
-        color = new ColorButton[] {inner, midInner, midOuter, outer};
+
+
 
         AudioAttributes.Builder builder = new AudioAttributes.Builder();
         builder.setUsage(AudioAttributes.USAGE_GAME);
@@ -155,9 +165,10 @@ public class GameActivity extends AppCompatActivity {
     class playGameClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v){
+            boolean flag = true;
             ColorButton button = (ColorButton) v;
-
             flashAndNoise(button);
+
             if(patternUser.size() == 0) {
                 game.addToPattern();
                 patternAI = game.getPattern();
@@ -174,14 +185,19 @@ public class GameActivity extends AppCompatActivity {
                     checkHighScore(patternAI.size()-1);
                     patternUser.clear();
                     game.deletePattern();
+                    flashAndNoise(fail);
                     game.addToPattern();
                     game.run();
                 }
             }
             if(patternUser.size() == patternAI.size()-1 && patternUser.size() != 0){
+                if(flag) {
+                    flashAndNoise(success);
+                }
                 game.run();
                 patternUser.clear();
             }
+
         }
     }
 
@@ -204,41 +220,29 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-//    private void run(){
-//        //Disable onClick for the buttons to display the pattern
-//        for(int i = 0; i < color.length; i++){
-//            color[i].setEnabled(false);
-//        }
-//
-//        Handler handler = new Handler();
-//        //Play the pattern
-//        runHelper(true);
-//
-//        //Used to disable buttons long
-//        //enough to play the pattern
-//        //Need to work on the timing
-//
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                //Re-enable onClick for the buttons to take input for the pattern
-//                for(int i = 0; i < color.length; i++){
-//                    color[i].setEnabled(true);
-//                }
-//            }
-//        }, 250*color.length*2);
-//    }
-    private void runHelper(boolean flag){
+    private void randomColorButtons(){
 
-        if(flag) {
-            for (int i = 0; i < patternAI.size(); i++) {
-                flashAndNoise(color[(int)patternAI.get(i)]);
-            }
-        }else{
-            for (int i = patternAI.size()-1; i <=0 ; i--) {
-                flashAndNoise(color[(int)patternAI.get(i)]);
-            }
-        }
     }
+
+    private void loseDialog(Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                game.addToPattern();
+                game.run();
+            }
+        });
+        builder.setNegativeButton("Level Select", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setTitle("You Lost");
+
+    }
+
+
 }
 
