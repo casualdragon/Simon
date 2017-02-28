@@ -72,56 +72,46 @@ public class GameActivity extends AppCompatActivity {
 
         fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
 
+
+        //Sets buttons for extreme or normal mode.
         if (gameType == GameType.EXTREME) {
             for (int i = 0; i < color.length; i++) {
                 color[i].setUpButton(baseColor[3], flashColor[3], listener, radius);
             }
-            success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
             fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+            success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
+            duration = 50;
         } else if (gameType == GameType.COLOR) {
 
+        } else if (gameType == GameType.POSITION) {
 
-            //Sets buttons for extreme or normal mode.
-            if (gameType == GameType.EXTREME) {
-                for (int i = 0; i < color.length; i++) {
-                    color[i].setUpButton(baseColor[3], flashColor[3], listener, radius);
-                }
-                fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-                success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
-                duration = 50;
-            } else if (gameType == GameType.COLOR) {
-
-            } else if (gameType == GameType.POSITION) {
-
-            } else {
-                for (int i = 0; i < color.length; i++) {
-                    color[i].setUpButton(baseColor[i], flashColor[i], listener, radius);
-                }
-                fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-                success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
-
+        } else {
+            for (int i = 0; i < color.length; i++) {
+                color[i].setUpButton(baseColor[i], flashColor[i], listener, radius);
             }
-
-            startSoundPool();
-
-            for (int i = 0; i < 4; i++) {
-                color[i].setEnabled(false);
-                color[i].setId(i);
-                color[i].setSoundPool(soundPool);
-            }
-
-            game = new Game(color, 4, true, soundPool, duration);
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    game.run();
-                }
-            }, 1250);
-
+            fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+            success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
 
         }
+
+        startSoundPool();
+
+        for (int i = 0; i < 4; i++) {
+            color[i].setEnabled(false);
+            color[i].setId(i);
+            color[i].setSoundPool(soundPool);
+        }
+
+        game = new Game(color, 4, true, soundPool, duration);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                game.run();
+            }
+        }, 1250);
+
 
     }
 
