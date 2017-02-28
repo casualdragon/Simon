@@ -51,8 +51,6 @@ public class Game {
             }
         }, 500);
 
-        new PatternPlayer().execute();
-
     }
 
     // Adds a random int to the pattern
