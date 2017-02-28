@@ -44,7 +44,7 @@
             android:textSize="30sp"/>
 
         <com.amyhill.simon.ColorButton
-            android:text="@string/colorMatch"
+            android:text="@string/Position"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/match_button"
@@ -54,7 +54,7 @@
             android:textSize="30sp"/>
 
         <com.amyhill.simon.ColorButton
-            android:text="@string/colorSwap"
+            android:text="@string/Color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/swap_button"

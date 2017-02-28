@@ -1,6 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="25dp"
+        android:weightSum="1"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Normal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/colorBlue"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="36sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+            <TextView
+                android:text="This version is played like the traditional simon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorBlue"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="24sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_weight="0.08">
+            <TextView
+                android:text="Color "
+                android:layout_width="132dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorGreen"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="36sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+            <TextView
+                android:text="This version is where you follow the color"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorGreen"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="24sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_weight="0.08">
+            <TextView
+                android:text="Position"
+                android:layout_width="132dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorYellow"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="30sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+            <TextView
+                android:text="This version is where you follow the position"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorYellow"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="24sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_weight="0.08">
+            <TextView
+                android:text="Extreme"
+                android:layout_width="132dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorRed"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="30sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+            <TextView
+                android:text="This version gets increasingly faster and the pattern is reversed"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorRed"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="casual"
+                android:textSize="18sp"
+                android:padding="5sp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
