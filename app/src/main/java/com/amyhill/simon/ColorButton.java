@@ -16,6 +16,7 @@ import android.widget.Button;
 
 public class ColorButton extends Button {
     //Fields
+    private int colorID;
     private int baseColor;
     private int flashColor;
     private int soundID;
@@ -38,20 +39,30 @@ public class ColorButton extends Button {
     }
 
     //Getters and Setters
+    public int getColorID() {
+        return colorID;
+    }
+
+    public void setColorID(int baseColorID) {
+        this.colorID = baseColorID;
+     setBaseColor(ContextCompat.getColor(context, colorID));
+    }
+
     public int getBaseColor() {
         return baseColor;
     }
 
     public void setBaseColor(int baseColor) {
-        this.baseColor = ContextCompat.getColor(context, baseColor);
+        this.baseColor = baseColor;
+        generateBackground(false);
     }
 
     public int getFlashColor() {
         return flashColor;
     }
 
-    public void setFlashColor(int flashColor) {
-        this.flashColor = ContextCompat.getColor(context, flashColor);
+    public void setFlashColorID(int flashColorID) {
+        this.flashColor = ContextCompat.getColor(context, flashColorID);
     }
 
     public void setSoundPool(SoundPool sp){this.soundPool = sp; makesSound = true;}
@@ -70,9 +81,10 @@ public class ColorButton extends Button {
 
     //Public methods
     //A method for setting up all the details not set in the contructors.
-    public void setUpButton(int baseColor, int flashColor, OnClickListener listener, int radius){
-        this.baseColor = ContextCompat.getColor(context, baseColor);
-        this.flashColor = ContextCompat.getColor(context, flashColor);
+    public void setUpButton(int baseColorID, int flashColorID, OnClickListener listener, int radius){
+        this.colorID = baseColorID;
+        this.baseColor = ContextCompat.getColor(context, baseColorID);
+        this.flashColor = ContextCompat.getColor(context, flashColorID);
         this.radius = radius;
         this.setOnClickListener(listener);
         generateBackground(false);
