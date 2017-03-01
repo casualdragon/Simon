@@ -124,8 +124,14 @@ public class Game {
                 buttons[i].setFlashColorID(flashColorIDs[numbers.get(i)]);
             }
         } else {
-            for (int i = 0; i < SIZE; i++) {
-                buttons[i].setUpButton(baseColorIDs[numbers.get(i)], flashColorIDs[numbers.get(i)], listener, radius);
+            if(gameType == GameActivity.GameType.COLOR) {
+                for (int i = 0; i < SIZE; i++) {
+                    buttons[i].setUpButton(baseColorIDs[numbers.get(i)], flashColorIDs[numbers.get(i)], listener, radius);
+                }
+            }else if (gameType == GameActivity.GameType.POSITION){
+                for (int i = 0; i < SIZE; i++) {
+                    buttons[i].setUpButton(baseColorIDs[numbers.get(i)], flashColorIDs[numbers.get(i)], listener, radius);
+                }
             }
         }
     }
@@ -280,6 +286,16 @@ public class Game {
             ColorButton button = (ColorButton) v;
 
             button.pokeButton(duration);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(gameType == GameActivity.GameType.COLOR){
+                        shuffleButtons(null);
+                    }
+                }
+            }, duration);
+            /*
             if(gameType == GameActivity.GameType.COLOR){
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -290,8 +306,18 @@ public class Game {
                         }
                     }
                 }, duration);
+            }else if(gameType == GameActivity.GameType.POSITION){
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(gameType == GameActivity.GameType.POSITION){
+                            shuffleButtons(null);
+                        }
+                    }
+                }, duration);
             }
-
+            */
 //            if(patternUser.size() == 0) {
 //                addToPattern();
 //            }
