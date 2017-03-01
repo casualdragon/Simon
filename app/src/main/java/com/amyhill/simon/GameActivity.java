@@ -26,23 +26,13 @@ public class GameActivity extends AppCompatActivity {
 
     public enum GameType {NORMAL, COLOR, POSITION, EXTREME}
 
-    final int SIZE = 4;
-    int duration;
-    int radius;
 
-    private SoundPool soundPool;
+
+
     private Game game;
     private GameType gameType;
     private ColorButton [] buttons;
-    private Vector patternAI;
-    private Vector <Integer> patternUser = new Vector<Integer>(100);
 
-    private int [] highscores = new int []{0,0,0};
-    private int [] baseColor = {R.color.colorBlue, R.color.colorGreen, R.color.colorYellow, R.color.colorRed};
-    private int [] flashColor = {R.color.colorBlueFlash, R.color.colorGreenFlash, R.color.colorYellowFlash, R.color.colorRedFLash};
-    private ColorButton fail;
-    private ColorButton success;
-    private Random random = new Random();
 
 
     @Override
@@ -58,50 +48,16 @@ public class GameActivity extends AppCompatActivity {
             gameType = GameType.NORMAL;
         }
 
-
         //Gets buttons
         ColorButton inner = (ColorButton) findViewById(R.id.blue_game_button);
         ColorButton midInner = (ColorButton) findViewById(R.id.green_game_button);
         ColorButton midOuter = (ColorButton) findViewById(R.id.yellow_game_button);
         ColorButton outer = (ColorButton) findViewById(R.id.red_game_button);
-        fail = (ColorButton) findViewById(R.id.fail_button);
-        success = (ColorButton) findViewById(R.id.success_button);
+        ColorButton fail = (ColorButton) findViewById(R.id.fail_button);
+        ColorButton success = (ColorButton) findViewById(R.id.success_button);
 
-        playGameClickListener listener = new playGameClickListener();
-        radius = 10;
-        duration = 250;
         buttons = new ColorButton[]{inner, midInner, midOuter, outer};
-
-
-        fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-
-
-        //Sets buttons for extreme or normal mode.
-        if (gameType == GameType.EXTREME) {
-            for (int i = 0; i < buttons.length; i++) {
-                buttons[i].setUpButton(baseColor[3], flashColor[3], listener, radius);
-            }
-            fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-            success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
-
-            duration = 50;
-        } else if (gameType == GameType.COLOR) {
-            shuffleButtons(listener);
-        } else if (gameType == GameType.POSITION) {
-            setDefaultButtons(listener);
-        } else {
-            setDefaultButtons(listener);
-        }
-
-        startSoundPool();
-
-        for (int i = 0; i < 4; i++) {
-            buttons[i].setEnabled(false);
-            buttons[i].setId(i);
-            buttons[i].setSoundPool(soundPool);
-        }
-
-        game = new Game(buttons, SIZE, true, soundPool, duration, gameType);
+        game = new Game(this, buttons, gameType, success, fail);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -109,45 +65,16 @@ public class GameActivity extends AppCompatActivity {
             public void run() {
                 game.run();
             }
-        }, 1250);
+        }, 750);
 
 
     }
-
-    private void setDefaultButtons(playGameClickListener listener) {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setUpButton(baseColor[i], flashColor[i], listener, radius);
-        }
-        fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-        success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
-    }
-
-    private void shuffleButtons(View.OnClickListener listener){
-//        HashSet<Integer> numbers = new HashSet<Integer>();
-        ArrayList<Integer> numbers = new ArrayList<Integer>();
-        for(int i = 0; i < SIZE; i++){
-            numbers.add(i);
-        }
-        shuffle(numbers);
-
-        if(listener == null) {
-            for(int i = 0; i < SIZE; i++) {
-                buttons[i].setBaseColor(baseColor[numbers.get(i)]);
-                buttons[i].setFlashColor(flashColor[numbers.get(i)]);
-            }
-        } else {
-            for (int i = 0; i < SIZE; i++) {
-                buttons[i].setUpButton(baseColor[numbers.get(i)], flashColor[numbers.get(i)], listener, radius);
-            }
-        }
-    }
-
 
 
     //Saves high score data to bundle
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle persistableBundle) {
-        persistableBundle.putIntArray(HIGHSCORE,highscores);
+        persistableBundle.putIntArray(HIGHSCORE,game.getHighscores());
         super.onSaveInstanceState(outState);
     }
 
@@ -156,106 +83,18 @@ public class GameActivity extends AppCompatActivity {
     public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
         if(persistentState != null){
-            highscores = persistentState.getIntArray(HIGHSCORE);
+            game.setHighscores(persistentState.getIntArray(HIGHSCORE));
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startSoundPool();
-        radius = 10;
-        duration = 250;
-
-    }
-
-    //Sets up sound pool
-    private void startSoundPool() {
-
-        AudioAttributes.Builder builder = new AudioAttributes.Builder();
-        builder.setUsage(AudioAttributes.USAGE_GAME);
-
-        SoundPool.Builder spbuilder = new SoundPool.Builder();
-        spbuilder.setAudioAttributes(builder.build());
-        spbuilder.setMaxStreams(1);
-        soundPool = spbuilder.build();
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                if(status == 0){
-                }
-            }
-        });
-
-        ColorButton inner = (ColorButton) findViewById(R.id.blue_game_button);
-        ColorButton midInner = (ColorButton) findViewById(R.id.green_game_button);
-        ColorButton midOuter = (ColorButton) findViewById(R.id.yellow_game_button);
-        ColorButton outer = (ColorButton) findViewById(R.id.red_game_button);
-
-        inner.setSound(soundPool.load(this, R.raw.a_piano, 1));
-        midInner.setSound(soundPool.load(this, R.raw.c_piano, 1));
-        midOuter.setSound(soundPool.load(this, R.raw.f_sharp_piano, 1));
-        outer.setSound(soundPool.load(this, R.raw.g_piano, 1));
-    }
-
-    //Onclick lister for game buttons.
-    class playGameClickListener implements View.OnClickListener{
-        @Override
-        public void onClick(View v){
-            boolean doesSuccessFlash = true;
-            ColorButton button = (ColorButton) v;
-
-            button.pokeButton(duration);
-
-            if(patternUser.size() == 0) {
-                game.addToPattern();
-                patternAI = game.getPattern();
-            }
-            for(int i =0; i < patternAI.size(); i++){
-                Log.i("==================", i+": "+patternAI.get(i));
-            }
-            for(int i = 0; i < highscores.length; i++){
-                Log.i("==============", "highscore"+(i+1)+":"+highscores[i]);
-            }
-            patternUser.add(button.getID());
-            for(int i = 0; i < patternUser.size(); i++){
-                if(patternUser.get(i) != patternAI.get(i)){
-                    checkHighScore(patternAI.size()-1);
-                    patternUser.clear();
-                    game.deletePattern();
-                    fail.pokeButton(duration);
-                    game.addToPattern();
-                    game.run();
-                    game.toggleButtons(false);
-                    return;
-                }
-            }
-            if(patternUser.size() == patternAI.size()-1 && patternUser.size() != 0){
-                if(doesSuccessFlash) {
-                    success.pokeButton(duration);
-                }
-                game.run();
-                patternUser.clear();
-                game.toggleButtons(false);
-                return;
-            }
-
-        }
+        //startSoundPool();
     }
 
     //Checks the highscores and updates if necessary.
-    private void checkHighScore(int value){
-        if(value > highscores[0]){
-            highscores[2] = highscores[1];
-            highscores[1] = highscores [0];
-            highscores[0] = value;
-        }else if(value > highscores[1]) {
-            highscores[2] = highscores[1];
-            highscores[1] = value;
-        }else if(value > highscores[2]){
-            highscores[2] = value;
-        }
-    }
+
 
     private void loseDialog(Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

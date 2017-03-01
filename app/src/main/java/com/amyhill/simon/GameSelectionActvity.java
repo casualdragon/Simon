@@ -37,9 +37,9 @@ public class GameSelectionActvity extends AppCompatActivity {
             int viewid = v.getId();
 
             if(button.getId() == R.id.match_button){
-                gameType = GameActivity.GameType.COLOR;
-            } else if(button.getId() == R.id.swap_button){
                 gameType = GameActivity.GameType.POSITION;
+            } else if(button.getId() == R.id.swap_button){
+                gameType = GameActivity.GameType.COLOR;
             } else if(button.getId() == R.id.extreme_button){
                 gameType = GameActivity.GameType.EXTREME;
             } else {
