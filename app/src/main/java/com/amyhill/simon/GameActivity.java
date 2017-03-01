@@ -163,6 +163,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         });
+
         ColorButton inner = (ColorButton) findViewById(R.id.blue_game_button);
         ColorButton midInner = (ColorButton) findViewById(R.id.green_game_button);
         ColorButton midOuter = (ColorButton) findViewById(R.id.yellow_game_button);

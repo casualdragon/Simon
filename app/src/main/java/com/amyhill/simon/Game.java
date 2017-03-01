@@ -21,6 +21,15 @@ public class Game {
     //Fields
     private final int SIZE;
     private int duration;
+
+    public boolean isReverse() {
+        return isReverse;
+    }
+
+    public void setReverse(boolean reverse) {
+        isReverse = reverse;
+    }
+
     private boolean isReverse;
     private Random random;
     private Vector<Integer> pattern;
@@ -66,6 +75,12 @@ public class Game {
 
     public Vector<Integer> getPattern() {
         return pattern;
+    }
+
+    public void toggleButtons(boolean enabled) {
+        for (int i = 0; i < SIZE; i++) {
+            buttons[i].setEnabled(enabled);
+        }
     }
 
     private class PatternPlayer extends AsyncTask<Void, Integer, Void>{
@@ -119,12 +134,6 @@ public class Game {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             toggleButtons(true);
-        }
-
-        private void toggleButtons(boolean enabled) {
-            for (int i = 0; i < SIZE; i++) {
-                buttons[i].setEnabled(enabled);
-            }
         }
     }
 
