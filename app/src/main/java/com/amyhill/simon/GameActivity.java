@@ -1,10 +1,8 @@
 package com.amyhill.simon;
 
 
-import android.graphics.Color;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
@@ -15,8 +13,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Vector;
+
+import static java.util.Collections.shuffle;
 
 public class GameActivity extends AppCompatActivity {
     public static final String MODE_NAME = "MODE_NAME";
@@ -24,13 +26,14 @@ public class GameActivity extends AppCompatActivity {
 
     public enum GameType {NORMAL, COLOR, POSITION, EXTREME}
 
+    final int SIZE = 4;
     int duration;
     int radius;
 
     private SoundPool soundPool;
     private Game game;
     private GameType gameType;
-    private ColorButton [] color;
+    private ColorButton [] buttons;
     private Vector patternAI;
     private Vector <Integer> patternUser = new Vector<Integer>(100);
 
@@ -67,7 +70,7 @@ public class GameActivity extends AppCompatActivity {
         playGameClickListener listener = new playGameClickListener();
         radius = 10;
         duration = 250;
-        color = new ColorButton[]{inner, midInner, midOuter, outer};
+        buttons = new ColorButton[]{inner, midInner, midOuter, outer};
 
 
         fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
@@ -75,39 +78,30 @@ public class GameActivity extends AppCompatActivity {
 
         //Sets buttons for extreme or normal mode.
         if (gameType == GameType.EXTREME) {
-            for (int i = 0; i < color.length; i++) {
-                color[i].setUpButton(baseColor[3], flashColor[3], listener, radius);
+            for (int i = 0; i < buttons.length; i++) {
+                buttons[i].setUpButton(baseColor[3], flashColor[3], listener, radius);
             }
             fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
             success.setUpButton(R.color.colorRed, R.color.colorGreenFlash, null, radius);
 
             duration = 50;
         } else if (gameType == GameType.COLOR) {
-
+            shuffleButtons(listener);
         } else if (gameType == GameType.POSITION) {
-
+            setDefaultButtons(listener);
         } else {
-            for (int i = 0; i < color.length; i++) {
-                color[i].setUpButton(baseColor[i], flashColor[i], listener, radius);
-            }
-            fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
-            success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
-
+            setDefaultButtons(listener);
         }
 
         startSoundPool();
 
         for (int i = 0; i < 4; i++) {
-            color[i].setEnabled(false);
-            color[i].setId(i);
-            color[i].setSoundPool(soundPool);
+            buttons[i].setEnabled(false);
+            buttons[i].setId(i);
+            buttons[i].setSoundPool(soundPool);
         }
 
-        game = new Game(color, 4, true, soundPool, duration);
-
-        if(gameType == GameType.EXTREME){
-            game.setReverse(true);
-        }
+        game = new Game(buttons, SIZE, true, soundPool, duration, gameType);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -119,6 +113,35 @@ public class GameActivity extends AppCompatActivity {
 
 
     }
+
+    private void setDefaultButtons(playGameClickListener listener) {
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setUpButton(baseColor[i], flashColor[i], listener, radius);
+        }
+        fail.setUpButton(R.color.colorRed, R.color.colorRedFLash, null, radius);
+        success.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, null, radius);
+    }
+
+    private void shuffleButtons(View.OnClickListener listener){
+//        HashSet<Integer> numbers = new HashSet<Integer>();
+        ArrayList<Integer> numbers = new ArrayList<Integer>();
+        for(int i = 0; i < SIZE; i++){
+            numbers.add(i);
+        }
+        shuffle(numbers);
+
+        if(listener == null) {
+            for(int i = 0; i < SIZE; i++) {
+                buttons[i].setBaseColor(baseColor[numbers.get(i)]);
+                buttons[i].setFlashColor(flashColor[numbers.get(i)]);
+            }
+        } else {
+            for (int i = 0; i < SIZE; i++) {
+                buttons[i].setUpButton(baseColor[numbers.get(i)], flashColor[numbers.get(i)], listener, radius);
+            }
+        }
+    }
+
 
 
     //Saves high score data to bundle

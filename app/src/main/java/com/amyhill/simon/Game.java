@@ -22,22 +22,15 @@ public class Game {
     private final int SIZE;
     private int duration;
 
-    public boolean isReverse() {
-        return isReverse;
-    }
-
-    public void setReverse(boolean reverse) {
-        isReverse = reverse;
-    }
-
-    private boolean isReverse;
     private Random random;
+    private GameActivity.GameType gameType;
     private Vector<Integer> pattern;
     private ColorButton [] buttons = new ColorButton[4];
 
 
     //Constructor
-    Game(ColorButton [] buttons, int size, boolean type, SoundPool soundPool, int duration){
+    Game(ColorButton [] buttons, int size, boolean type, SoundPool soundPool,
+         int duration, GameActivity.GameType gameType){
         SIZE = size;
         for(int i = 0; i < SIZE; i++) {
             this.buttons[i] = buttons[i];
@@ -45,7 +38,7 @@ public class Game {
         random = new Random();
         pattern = new Vector<>(100);
         pattern.add(random.nextInt(SIZE));
-        isReverse = false;
+        this.gameType = gameType;
         this.duration = duration;
     }
 
@@ -64,7 +57,11 @@ public class Game {
 
     // Adds a random int to the pattern
     public void addToPattern() {
-        pattern.add(random.nextInt(SIZE));
+        if(gameType == GameActivity.GameType.COLOR) {
+            pattern.add(buttons[random.nextInt(SIZE)].getBaseColor());
+        } else{
+            pattern.add(random.nextInt(SIZE));
+        }
     }
 
     public void deletePattern(){
@@ -90,7 +87,7 @@ public class Game {
                 Determines if the pattern should
                 be done in reverse.
                */
-            if(!isReverse) {
+            if(gameType == GameActivity.GameType.EXTREME) {
                 for (int i = 0; i < pattern.size(); i++) {
                     try{
                         Thread.sleep(250);
@@ -127,7 +124,15 @@ public class Game {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
+            if(gameType == GameActivity.GameType.COLOR){
+                for(ColorButton button: buttons){
+                    if(button.getBaseColor() == values[0]){
+                        button.pokeButton(250);
+                    }
+                }
+            }else {
             buttons[values[0]].pokeButton(250);
+            }
         }
 
         @Override
