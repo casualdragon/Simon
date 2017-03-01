@@ -6,7 +6,7 @@
     <string name="about">About</string>
     <string name="exit">Exit</string>
     <string name="normal">Normal</string>
-    <string name="colorSwap">Color Swap</string>
-    <string name="colorMatch">Color Match</string>
+    <string name="Color">Color</string>
+    <string name="Position">Position</string>
     <string name="extreme">Extreme</string>
 </resources>
