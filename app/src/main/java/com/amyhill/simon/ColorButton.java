@@ -119,32 +119,5 @@ public class ColorButton extends Button {
         this.flashColor = 0;
         makesSound = false;
     }
-    
-    //Task that flashes and makes noise for button.
-    class pokeButtonTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                Thread.sleep(duration);
-            } catch (InterruptedException e) {
-               return null;
-            }
 
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            generateBackground(true);
-            if(makesSound) {
-                soundPool.play(getSound(), .5f, 1.0f, 0, 0, 1.0f);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            generateBackground(false);
-        }
-    }
 }

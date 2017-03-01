@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#AAAAAA</color>
-    <color name="colorBlue">#0000AB</color>
+    <color name="colorBlue">#0000ab</color>
     <color name="colorRed">#AB0000</color>
-    <color name="colorGreen">#00AB00</color>
+    <color name="colorGreen">#00ab00</color>
     <color name="colorYellow">#AbAb00</color>
     <color name="colorBlueFlash">#0000FF</color>
     <color name="colorRedFLash">#FF0000</color>
     <color name="colorGreenFlash">#00FF00</color>
     <color name="colorYellowFlash">#FFFF00</color>
-    <color name="colorText">#FFFFFF</color>
+    <color name="colorText">#ffffff</color>
     <color name="colorTextDark">#000000</color>
 </resources>

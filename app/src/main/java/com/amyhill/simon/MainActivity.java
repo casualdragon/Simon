@@ -38,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
             if (viewid == R.id.play_button) {
                 launchActivity(GameSelectionActvity.class);
-            } else if (viewid == R.id.exit_button){
+            } else if (viewid == R.id.about_button) {
+                launchActivity(AboutActivity.class);
+            } else if(viewid == R.id.ins_button){
+                launchActivity(HowToActivity.class);
+            }else if (viewid == R.id.exit_button){
                 finish();
             }
         }

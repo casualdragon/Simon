@@ -15,9 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameActivity" android:persistableMode="persistAcrossReboots"/>
+        <activity
+            android:name=".GameActivity"
+            android:persistableMode="persistAcrossReboots" />
         <activity android:name=".AboutActivity" />
-        <activity android:name=".GameSelectionActvity"/>
+        <activity android:name=".GameSelectionActvity" />
+        <activity android:name=".HowToActivity"></activity>
     </application>
 
 </manifest>
