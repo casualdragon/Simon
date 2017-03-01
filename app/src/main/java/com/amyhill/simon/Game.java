@@ -5,6 +5,7 @@ import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class Game {
     Game(Context context, ColorButton [] buttons, GameActivity.GameType gameType, ColorButton success, ColorButton fail){
         this.buttons = buttons;
         pattern = new Vector<>(100);
-        pattern.add(random.nextInt(SIZE));
+
         this.gameType = gameType;
         this.success = success;
         this.fail = fail;
@@ -70,7 +71,6 @@ public class Game {
 
         startSoundPool();
         setupButtons();
-
     }
 
     private void setupButtons()
@@ -133,6 +133,7 @@ public class Game {
 
     public void run(){
         //Starts Async Task that plays pattern
+        addToPattern();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -213,6 +214,7 @@ public class Game {
                 Determines if the pattern should
                 be done in reverse.
                */
+
             if(gameType == GameActivity.GameType.EXTREME) {
                 for (int i = pattern.size()-1; i >= 0 ; i--) {
                     try{
@@ -243,7 +245,6 @@ public class Game {
         protected void onPreExecute() {
             super.onPreExecute();
             toggleButtons(false);
-
         }
 
         @Override
@@ -279,31 +280,45 @@ public class Game {
             ColorButton button = (ColorButton) v;
 
             button.pokeButton(duration);
-
-            if(patternUser.size() == 0) {
-                addToPattern();
+            if(gameType == GameActivity.GameType.COLOR){
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(gameType == GameActivity.GameType.COLOR){
+                            shuffleButtons(null);
+                        }
+                    }
+                }, duration);
             }
+
+//            if(patternUser.size() == 0) {
+//                addToPattern();
+//            }
 //            //code for testing bugs
-//            for(int i =0; i < patternAI.size(); i++){
-//                Log.i("==================", i+": "+patternAI.get(i));
+//            for(int i =0; i < pattern.size(); i++){
+//                Log.i("==================", i+": "+pattern.get(i));
 //            }
 //            for(int i = 0; i < highscores.length; i++){
 //                Log.i("==============", "highscore"+(i+1)+":"+ highscores[i]);
 //            }
-            patternUser.add(button.getID());
+            if(gameType == GameActivity.GameType.COLOR){
+                patternUser.add(button.getColorID());
+            } else {
+                patternUser.add(button.getID());
+            }
             for(int i = 0; i < patternUser.size(); i++){
-                if(patternUser.get(i) != pattern.get(i)){
+                if(!patternUser.get(i).equals(pattern.get(i))){
                     checkHighScore(pattern.size()-1);
                     patternUser.clear();
                     deletePattern();
                     fail.pokeButton(duration);
-                    addToPattern();
                     run();
                     toggleButtons(false);
                     return;
                 }
             }
-            if(patternUser.size() == pattern.size()-1 && patternUser.size() != 0){
+            if(patternUser.size() == pattern.size() && patternUser.size() != 0){
                 if(doesSuccessFlash) {
                     success.pokeButton(duration);
                 }
