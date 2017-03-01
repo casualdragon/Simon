@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+//TestCommit text
+
 public class GameSelectionActvity extends AppCompatActivity {
     private GameActivity.GameType gameType;
 
