@@ -287,27 +287,14 @@ public class Game {
 
             button.pokeButton(duration);
 
-            if(gameType == GameActivity.GameType.COLOR){
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(gameType == GameActivity.GameType.COLOR){
-                            shuffleButtons(null);
-                        }
-                    }
-                }, duration);
-            }else if(gameType == GameActivity.GameType.POSITION){
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(gameType == GameActivity.GameType.POSITION){
-                            shuffleButtons(null);
-                        }
-                    }
-                }, duration);
-            }
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    shuffleButtons(null);
+
+                }
+            }, duration);
 
 //            if(patternUser.size() == 0) {
 //                addToPattern();
