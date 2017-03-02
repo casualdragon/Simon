@@ -93,6 +93,24 @@ public class GameActivity extends AppCompatActivity {
         //startSoundPool();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopGameThreads();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopGameThreads();
+    }
+
+    private void stopGameThreads() {
+        if(game != null){
+            game.stop();
+        }
+    }
+
     //Checks the highscores and updates if necessary.
 
 
