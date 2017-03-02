@@ -28,7 +28,7 @@ public class Game {
     //Fields
 
     private final int SIZE = 4;
-    private final int duration = 250;
+    private final int duration = 350;
     private final int radius = 10;
     private final int extremeDuration = 50;
     private final Random random = new Random();
@@ -230,6 +230,12 @@ public class Game {
 
                     }
                     publishProgress(pattern.get(i));
+                    try{
+                        Thread.sleep(100);
+                    } catch (InterruptedException e){
+                        return null;
+
+                    }
 
                 }
             }else{
@@ -241,7 +247,12 @@ public class Game {
 
                     }
                     publishProgress(pattern.get(i));
+                    try{
+                        Thread.sleep(100);
+                    } catch (InterruptedException e){
+                        return null;
 
+                    }
                 }
             }
             return null;
@@ -287,14 +298,16 @@ public class Game {
 
             button.pokeButton(duration);
 
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    shuffleButtons(null);
+            if(gameType == GameActivity.GameType.COLOR || gameType == GameActivity.GameType.POSITION) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        shuffleButtons(null);
 
-                }
-            }, duration);
+                    }
+                }, duration);
+            }
 
 //            if(patternUser.size() == 0) {
 //                addToPattern();
