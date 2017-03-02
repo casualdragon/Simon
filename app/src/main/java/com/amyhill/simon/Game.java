@@ -38,6 +38,7 @@ public class Game {
     private ColorButton fail;
     private ColorButton success;
     private Context context;
+    private PatternPlayer playerThread;
 
 
     private ColorButton [] buttons = new ColorButton[4];
@@ -145,10 +146,17 @@ public class Game {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                new PatternPlayer().execute();
+                playerThread = new PatternPlayer();
+                playerThread.execute();
             }
         }, 500);
 
+    }
+
+    public void stop(){
+        if(playerThread != null){
+            playerThread.cancel(true);
+        }
     }
 
     // Adds a random int to the pattern
@@ -223,39 +231,28 @@ public class Game {
 
             if(gameType == GameActivity.GameType.EXTREME) {
                 for (int i = pattern.size()-1; i >= 0 ; i--) {
-                    try{
-                        Thread.sleep(extremeDuration);
-                    } catch (InterruptedException e){
-                        return null;
-
-                    }
+                    if (sleepPPThread(extremeDuration)) return null;
                     publishProgress(pattern.get(i));
-                    try{
-                        Thread.sleep(100);
-                    } catch (InterruptedException e){
-                        return null;
-
-                    }
+                    if (sleepPPThread(100)) return null;
 
                 }
             }else{
                 for (int i = 0; i < pattern.size(); i++) {
-                    try{
-                        Thread.sleep(duration);
-                    } catch (InterruptedException e){
-                        return null;
-
-                    }
+                    if (sleepPPThread(duration)) return null;
                     publishProgress(pattern.get(i));
-                    try{
-                        Thread.sleep(100);
-                    } catch (InterruptedException e){
-                        return null;
-
-                    }
+                    if (sleepPPThread(100)) return null;
                 }
             }
             return null;
+        }
+
+        private boolean sleepPPThread(int duration) {
+            try{
+                Thread.sleep(duration);
+            } catch (InterruptedException e){
+                return true;
+            }
+            return false;
         }
 
         @Override
