@@ -82,7 +82,7 @@ public class Game {
         setDefaultButtons(listener);
 
 
-        if (gameType == GameActivity.GameType.COLOR) {
+        if (gameType == GameActivity.GameType.COLOR || gameType == GameActivity.GameType.POSITION) {
             shuffleButtons(listener);
         }
     }
@@ -286,38 +286,16 @@ public class Game {
             ColorButton button = (ColorButton) v;
 
             button.pokeButton(duration);
+
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(gameType == GameActivity.GameType.COLOR){
-                        shuffleButtons(null);
-                    }
+                    shuffleButtons(null);
+
                 }
             }, duration);
-            /*
-            if(gameType == GameActivity.GameType.COLOR){
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(gameType == GameActivity.GameType.COLOR){
-                            shuffleButtons(null);
-                        }
-                    }
-                }, duration);
-            }else if(gameType == GameActivity.GameType.POSITION){
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(gameType == GameActivity.GameType.POSITION){
-                            shuffleButtons(null);
-                        }
-                    }
-                }, duration);
-            }
-            */
+
 //            if(patternUser.size() == 0) {
 //                addToPattern();
 //            }
