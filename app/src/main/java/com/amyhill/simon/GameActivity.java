@@ -1,8 +1,10 @@
 package com.amyhill.simon;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
@@ -10,6 +12,7 @@ import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 
@@ -26,12 +29,11 @@ public class GameActivity extends AppCompatActivity {
 
     public enum GameType {NORMAL, COLOR, POSITION, EXTREME}
 
-
-
-
     private Game game;
     private GameType gameType;
     private ColorButton [] buttons;
+
+    private Highscore highscores;
 
 
 
@@ -39,7 +41,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acivity_game);
-
+        highscores = new Highscore(getApplicationContext());
 
         //Gets the gamemode from the intent.
         if (getIntent().hasExtra(MODE_NAME)) {
@@ -57,7 +59,8 @@ public class GameActivity extends AppCompatActivity {
         ColorButton success = (ColorButton) findViewById(R.id.success_button);
 
         buttons = new ColorButton[]{inner, midInner, midOuter, outer};
-        game = new Game(this, buttons, gameType, success, fail);
+
+        game = new Game(this, buttons, gameType, success, fail, highscores);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -68,23 +71,6 @@ public class GameActivity extends AppCompatActivity {
         }, 750);
 
 
-    }
-
-
-    //Saves high score data to bundle
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle persistableBundle) {
-        persistableBundle.putIntArray(HIGHSCORE,game.getHighscores());
-        super.onSaveInstanceState(outState);
-    }
-
-    //Sets high score data from bundle.
-    @Override
-    public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onPostCreate(savedInstanceState, persistentState);
-        if(persistentState != null){
-            game.setHighscores(persistentState.getIntArray(HIGHSCORE));
-        }
     }
 
     @Override
@@ -109,28 +95,6 @@ public class GameActivity extends AppCompatActivity {
         if(game != null){
             game.stop();
         }
-    }
-
-    //Checks the highscores and updates if necessary.
-
-
-    private void loseDialog(Context context){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                game.addToPattern();
-                game.run();
-            }
-        });
-        builder.setNegativeButton("Level Select", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.setTitle("You Lost");
-
     }
 
 }
