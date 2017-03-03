@@ -79,6 +79,7 @@ public class ColorButton extends Button {
 
     public int getID(){return id;}
 
+
     //Public methods
     //A method for setting up all the details not set in the contructors.
     public void setUpButton(int baseColorID, int flashColorID, OnClickListener listener, int radius){
@@ -96,9 +97,7 @@ public class ColorButton extends Button {
             this.duration = duration;
 
             generateBackground(true);
-            if(makesSound) {
-                soundPool.play(getSound(), .5f, 1.0f, 0, 0, 1.0f);
-            }
+            playSound();
 
             Handler handler = new Handler();
 
@@ -108,6 +107,12 @@ public class ColorButton extends Button {
                     generateBackground(false);
                 }
             }, duration);
+        }
+    }
+
+    public void playSound() {
+        if(makesSound) {
+            soundPool.play(getSound(), .5f, 1.0f, 0, 0, 1.0f);
         }
     }
 

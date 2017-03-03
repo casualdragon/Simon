@@ -147,7 +147,7 @@ public class Game {
                 playerThread = new PatternPlayer();
                 playerThread.execute();
             }
-        }, 500);
+        }, 550);
 
     }
 
@@ -189,7 +189,7 @@ public class Game {
 
         SoundPool.Builder spbuilder = new SoundPool.Builder();
         spbuilder.setAudioAttributes(builder.build());
-        spbuilder.setMaxStreams(1);
+        spbuilder.setMaxStreams(4);
         soundPool = spbuilder.build();
         soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
@@ -337,6 +337,9 @@ public class Game {
                     patternUser.clear();
                     deletePattern();
                     fail.pokeButton(duration);
+                    for(ColorButton item : buttons){
+                        item.playSound();
+                    }
                     run();
                     toggleButtons(false);
                     loseDialog();
