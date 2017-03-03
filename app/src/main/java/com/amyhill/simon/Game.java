@@ -1,13 +1,21 @@
 package com.amyhill.simon;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
@@ -19,8 +27,7 @@ import static java.util.Collections.shuffle;
  * run() - executes the pattern for the user but does not take input
  * addTopattern() - adds one number to the current pattern
  * deletePattern() - erases the vector
- * check() - used to check if the button pressed is corrected
- *          *This relies on the buttons position in the array
+ *
  *
  */
 
@@ -47,21 +54,10 @@ public class Game {
     private Vector<Integer> pattern;
     private Vector <Integer> patternUser = new Vector<Integer>(100);
 
-
-    public int[] getHighscores() {
-        return highscores;
-    }
-
-    public void setHighscores(int[] highscores) {
-        this.highscores = highscores;
-    }
-
-    private int [] highscores = new int []{0,0,0};
-
-
+    private Highscore highscores = new Highscore(context);
 
     //Constructor
-    Game(Context context, ColorButton [] buttons, GameActivity.GameType gameType, ColorButton success, ColorButton fail){
+    Game(Context context, ColorButton [] buttons, GameActivity.GameType gameType, ColorButton success, ColorButton fail, Highscore highscores){
         this.buttons = buttons;
         pattern = new Vector<>(100);
 
@@ -69,6 +65,7 @@ public class Game {
         this.success = success;
         this.fail = fail;
         this.context = context;
+        this.highscores = highscores;
 
         startSoundPool();
         setupButtons();
@@ -141,6 +138,7 @@ public class Game {
     public void run(){
         //Starts Async Task that plays pattern
         addToPattern();
+        readFile();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -174,28 +172,14 @@ public class Game {
         }
     }
 
-    public Vector<Integer> getPattern() {
-        return pattern;
-    }
-
     public void toggleButtons(boolean enabled) {
         for (int i = 0; i < SIZE; i++) {
             buttons[i].setEnabled(enabled);
         }
     }
 
-    public void checkHighScore(int value){
-        if(value > highscores[0]){
-            highscores[2] = highscores[1];
-            highscores[1] = highscores [0];
-            highscores[0] = value;
-        }else if(value > highscores[1]) {
-            highscores[2] = highscores[1];
-            highscores[1] = value;
-        }else if(value > highscores[2]){
-            highscores[2] = value;
-        }
-    }
+
+
 
     //Sets up sound pool
     private void startSoundPool() {
@@ -220,6 +204,30 @@ public class Game {
         buttons[2].setSound(soundPool.load(context, R.raw.f_sharp_piano, 1));
         buttons[3].setSound(soundPool.load(context, R.raw.g_piano, 1));
     }
+
+    private void loseDialog(){
+        stop();
+        pattern.clear();
+        patternUser.clear();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                run();
+            }
+        });
+        readFile();
+        builder.setMessage("Top Highscores\n1st: " +  highscores.getHighscore(0) + " "
+                + highscores.getName(0)+ " " + highscores.getGameType(0) + "\n2nd: "
+                + highscores.getHighscore(1)+ " " + highscores.getName(1) + " " + highscores.getGameType(1)
+                + "\n3rd: " + highscores.getHighscore(2) + " " + highscores.getName(2)+ " "
+                + highscores.getGameType(2));
+        builder.setTitle("You Lost");
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 
     private class PatternPlayer extends AsyncTask<Void, Integer, Void>{
         @Override
@@ -323,12 +331,15 @@ public class Game {
             }
             for(int i = 0; i < patternUser.size(); i++){
                 if(!patternUser.get(i).equals(pattern.get(i))){
-                    checkHighScore(pattern.size()-1);
+                    readFile();
+                    highscores.checkHighScore(pattern.size()-1);
+                    writeFile();
                     patternUser.clear();
                     deletePattern();
                     fail.pokeButton(duration);
                     run();
                     toggleButtons(false);
+                    loseDialog();
                     return;
                 }
             }
@@ -343,6 +354,35 @@ public class Game {
             }
 
         }
+    }
+
+    public void writeFile(){
+        try{
+            FileOutputStream fos = context.openFileOutput("highscores.txt", Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(highscores);
+
+            oos.close();
+            fos.close();
+            Log.i("==============", "Game wrote the file");
+
+        }catch (Exception e){
+            Log.i("==============", e.getMessage());
+        }
+    }
+    public boolean readFile(){
+        try{
+            FileInputStream fis = context.openFileInput("highscores.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            highscores = (Highscore) ois.readObject();
+
+            fis.close();
+            ois.close();
+            Log.i("==============", "Game readed the file");
+
+        }catch (Exception e){ return false; }
+        return true;
     }
 
 
