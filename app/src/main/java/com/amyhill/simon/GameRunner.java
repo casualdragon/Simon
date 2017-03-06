@@ -3,19 +3,10 @@ package com.amyhill.simon;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
-import static java.util.Collections.shuffle;
+import java.util.Random;
 
 /**
  * Created by nonam on 3/6/2017.
@@ -77,10 +68,18 @@ public class GameRunner {
             }
         }
 
+        if(gameType == GameType.COLOR || gameType == GameType.POSITION){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    shuffleButtons();
+                }
+            }, DURATION);
+
+        }
+
         if(didSucceed){
-            if(gameType == GameType.COLOR || gameType == GameType.POSITION){
-//                shuffleButtons();
-            }
             if(count == simonGame.getPatternLength()) {
                 buttons[5].pokeButton(DURATION);
                 simonGame.generatePattern();
@@ -113,7 +112,10 @@ public class GameRunner {
         }, DURATION * 2);
     }
 
-    private void stopAsyncPlayer(){patternPlayer.cancel(true);}
+    private void stopAsyncPlayer(){
+        patternPlayer.cancel(true);
+        highscores.writeFile();
+    }
 
     private void toggleButtons(boolean isEnabled){
         for(int i = 0; i < buttons.length - 2; i++){
@@ -142,40 +144,27 @@ public class GameRunner {
     }
 
     private void shuffleButtons(){
-        ArrayList<Integer> numbers = new ArrayList<Integer>();
+        ArrayList<ColorButton.Color> numbers = new ArrayList<>();
+        ArrayList<ColorButton.Color> shuffledNumbers = new ArrayList<>();
+        Random random = new Random();
+
+        numbers.add(ColorButton.Color.BLUE);
+        numbers.add(ColorButton.Color.GREEN);
+        numbers.add(ColorButton.Color.YELLOW);
+        numbers.add(ColorButton.Color.RED);
 
         for(int i = 0; i < 4; i++){
-            numbers.add(i);
+            int number = random.nextInt(4-i);
+            shuffledNumbers.add(numbers.get(number));
+            numbers.remove(number);
         }
 
-        shuffle(numbers);
-
-        for(int i = 0; i < 4; i++){
-            ColorButton.Color color;
-            switch (i){
-                case 0:
-                    color = ColorButton.Color.BLUE;
-                    break;
-                case 1:
-                    color = ColorButton.Color.GREEN;
-                    break;
-                case 2:
-                    color = ColorButton.Color.YELLOW;
-                    break;
-                case 3:
-                    color = ColorButton.Color.RED;
-                    break;
-                default:
-                    return;
-            }
-
-            buttons[i].setColor(color);
+        for(int i = 0; i < 4; i++) {
+            buttons[i].setColor(shuffledNumbers.get(i));
         }
 
 
     }
-
-
 
     class PatternPlayer extends AsyncTask<Void, Integer, Void>{
         @Override
@@ -224,6 +213,13 @@ public class GameRunner {
 
             if (gameType == GameType.EXTREME) {
                 buttons[values[0]].pokeButton(EXTREME_DURATION);
+            } else if(gameType == GameType.COLOR){
+                for (ColorButton button:
+                     buttons) {
+                    if(button.getIDColor() ==  values[0]){
+                        button.pokeButton(DURATION);
+                    }
+                }
             } else {
                 buttons[values[0]].pokeButton(DURATION);
             }

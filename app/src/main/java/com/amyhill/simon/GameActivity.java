@@ -1,40 +1,19 @@
 package com.amyhill.simon;
 
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
-import android.os.Handler;
-import android.os.PersistableBundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Vector;
-
-import static java.util.Collections.shuffle;
 
 public class GameActivity extends AppCompatActivity {
     public static final String MODE_NAME = "MODE_NAME";
-    public static final String HIGHSCORE = "HIGHSCORE";
 
     private GameRunner.GameType gameType;
     private ColorButton [] buttons;
     private GameRunner gameRunner;
     private SoundPool soundPool;
-
-    private Highscore highscores;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
