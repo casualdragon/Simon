@@ -31,8 +31,8 @@ public class GameRunner {
     public GameRunner(ColorButton[]buttons, GameType gameType) {
         this.buttons = buttons;
         this.gameType = gameType;
-        highscores = new Highscore(buttons[0].getContext());
-        highscores.readFile();
+        highscores = new Highscore();
+        highscores.readFile(buttons[0].getContext());
         patternPlayer = new PatternPlayer();
     }
 
@@ -47,6 +47,7 @@ public class GameRunner {
 
     public void stop() {
         stopAsyncPlayer();
+        highscores.writeFile(buttons[0].getContext());
     }
 
     public void play(ColorButton button){
@@ -116,7 +117,6 @@ public class GameRunner {
 
     private void stopAsyncPlayer(){
         patternPlayer.cancel(true);
-        highscores.writeFile();
     }
 
     private void toggleButtons(boolean isEnabled){
@@ -134,16 +134,12 @@ public class GameRunner {
                 start();
             }
         });
-//        builder.setMessage("Top Highscores\n1st: " +  highscores.getHighscore(0) + " "
-//                + highscores.getName(0)+ " " + highscores.getGameType(0) + "\n2nd: "
-//                + highscores.getHighscore(1)+ " " + highscores.getName(1) + " " + highscores.getGameType(1)
-//                + "\n3rd: " + highscores.getHighscore(2) + " " + highscores.getName(2)+ " "
-//                + highscores.getGameType(2));
 
         builder.setMessage("Top Highscores\n1st: " +  highscores.getHighscore(0) + " "
-                + highscores.getName(0)+ " " +  "\n2nd: "
-                + highscores.getHighscore(1)+ " " + highscores.getName(1) + " "
-                + "\n3rd: " + highscores.getHighscore(2) + " " + highscores.getName(2)+ " ");
+                + highscores.getName(0)+ " " + highscores.getGameType(0) + "\n2nd: "
+                + highscores.getHighscore(1)+ " " + highscores.getName(1) + " " + highscores.getGameType(1)
+                + "\n3rd: " + highscores.getHighscore(2) + " " + highscores.getName(2)+ " "
+                + highscores.getGameType(2));
 
         builder.setTitle("You Lost");
 

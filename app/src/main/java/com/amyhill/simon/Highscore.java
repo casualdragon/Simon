@@ -16,14 +16,12 @@ import java.io.Serializable;
 
 public class Highscore  implements Serializable{
     private final String FILE_NAME = "highscores1.txt";
-    Context context;
     private int [] highscore = new int [3];
     private String [] name = new String [3];
     private GameRunner.GameType [] gameType = new GameRunner.GameType[3];
 
 
-    public Highscore(Context context) {
-        this.context = context;
+    public Highscore() {
         for (int i = 0; i < highscore.length; i++) {
             highscore[i] = 0;
             name[i] = "";
@@ -52,7 +50,7 @@ public class Highscore  implements Serializable{
     public int [] getHighscores(){return highscore;}
 
 
-    public void writeFile(){
+    public void writeFile(Context context){
         try{
             FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -67,7 +65,7 @@ public class Highscore  implements Serializable{
         }
     }
 
-    public boolean readFile(){
+    public boolean readFile(Context context){
         try{
             FileInputStream fis = context.openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(fis);
