@@ -94,7 +94,7 @@ public class GameActivity extends AppCompatActivity {
 
         SoundPool.Builder spbuilder = new SoundPool.Builder();
         spbuilder.setAudioAttributes(builder.build());
-        spbuilder.setMaxStreams(4);
+        spbuilder.setMaxStreams(10);
         soundPool = spbuilder.build();
         soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override

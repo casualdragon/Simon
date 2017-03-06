@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Handler;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,7 +15,7 @@ import java.util.Random;
  */
 
 public class GameRunner {
-    public enum GameType {NORMAL, COLOR, POSITION, EXTREME}
+    public enum GameType implements Serializable {NORMAL, COLOR, POSITION, EXTREME}
     private final static int DURATION = 250;
     private final static int EXTREME_DURATION = 50;
 
@@ -29,7 +31,7 @@ public class GameRunner {
     public GameRunner(ColorButton[]buttons, GameType gameType) {
         this.buttons = buttons;
         this.gameType = gameType;
-        highscores = new Highscore();
+        highscores = new Highscore(buttons[0].getContext());
         highscores.readFile();
         patternPlayer = new PatternPlayer();
     }
@@ -132,11 +134,17 @@ public class GameRunner {
                 start();
             }
         });
+//        builder.setMessage("Top Highscores\n1st: " +  highscores.getHighscore(0) + " "
+//                + highscores.getName(0)+ " " + highscores.getGameType(0) + "\n2nd: "
+//                + highscores.getHighscore(1)+ " " + highscores.getName(1) + " " + highscores.getGameType(1)
+//                + "\n3rd: " + highscores.getHighscore(2) + " " + highscores.getName(2)+ " "
+//                + highscores.getGameType(2));
+
         builder.setMessage("Top Highscores\n1st: " +  highscores.getHighscore(0) + " "
-                + highscores.getName(0)+ " " + highscores.getGameType(0) + "\n2nd: "
-                + highscores.getHighscore(1)+ " " + highscores.getName(1) + " " + highscores.getGameType(1)
-                + "\n3rd: " + highscores.getHighscore(2) + " " + highscores.getName(2)+ " "
-                + highscores.getGameType(2));
+                + highscores.getName(0)+ " " +  "\n2nd: "
+                + highscores.getHighscore(1)+ " " + highscores.getName(1) + " "
+                + "\n3rd: " + highscores.getHighscore(2) + " " + highscores.getName(2)+ " ");
+
         builder.setTitle("You Lost");
 
         AlertDialog alertDialog = builder.create();

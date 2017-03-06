@@ -15,25 +15,15 @@ import java.io.Serializable;
  */
 
 public class Highscore  implements Serializable{
-    public int getHighscore(int i) {
-        return highscore[i];
-    }
-
-    public String getName(int i) {
-        return name[i];
-    }
-
-    public GameRunner.GameType getGameType(int i) {
-        return gameType[i];
-    }
-
+    private final String FILE_NAME = "highscores1.txt";
+    Context context;
     private int [] highscore = new int [3];
     private String [] name = new String [3];
     private GameRunner.GameType [] gameType = new GameRunner.GameType[3];
-    Context context;
-    private String filename = "highscores.txt";
 
-    public Highscore() {
+
+    public Highscore(Context context) {
+        this.context = context;
         for (int i = 0; i < highscore.length; i++) {
             highscore[i] = 0;
             name[i] = "";
@@ -64,7 +54,7 @@ public class Highscore  implements Serializable{
 
     public void writeFile(){
         try{
-            FileOutputStream fos = context.openFileOutput("highscores.txt", Context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(this);
 
@@ -76,18 +66,34 @@ public class Highscore  implements Serializable{
             Log.i("==============", e.getMessage());
         }
     }
+
     public boolean readFile(){
         try{
-            FileInputStream fis = context.openFileInput("highscores.txt");
+            FileInputStream fis = context.openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
             highscore = ((Highscore) ois.readObject()).getHighscores();
 
             fis.close();
             ois.close();
-            Log.i("==============", "Game readed the file");
+            Log.i("==============", "Game read the file");
 
-        }catch (Exception e){ return false; }
+        }catch (Exception e){
+            Log.i("==============", e.getMessage());
+            return false;
+        }
         return true;
+    }
+
+    public int getHighscore(int i) {
+        return highscore[i];
+    }
+
+    public String getName(int i) {
+        return name[i];
+    }
+
+    public GameRunner.GameType getGameType(int i) {
+        return gameType[i];
     }
 }
