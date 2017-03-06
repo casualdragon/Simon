@@ -8,7 +8,7 @@ import android.view.View;
 //TestCommit text
 
 public class GameSelectionActvity extends AppCompatActivity {
-    private GameActivity.GameType gameType;
+    private GameRunner.GameType gameType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +23,10 @@ public class GameSelectionActvity extends AppCompatActivity {
         int radius = 100;
 
         clickListener listener = new clickListener();
-        normal.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
-        match.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
-        swap.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
-        extreme.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+        normal.setUpButton(ColorButton.Color.BLUE, listener, radius);
+        match.setUpButton(ColorButton.Color.GREEN, listener, radius);
+        swap.setUpButton(ColorButton.Color.YELLOW, listener, radius);
+        extreme.setUpButton(ColorButton.Color.RED, listener, radius);
     }
 
     class clickListener implements View.OnClickListener{
@@ -39,13 +39,13 @@ public class GameSelectionActvity extends AppCompatActivity {
             int viewid = v.getId();
 
             if(button.getId() == R.id.match_button){
-                gameType = GameActivity.GameType.POSITION;
+                gameType = GameRunner.GameType.POSITION;
             } else if(button.getId() == R.id.swap_button){
-                gameType = GameActivity.GameType.COLOR;
+                gameType = GameRunner.GameType.COLOR;
             } else if(button.getId() == R.id.extreme_button){
-                gameType = GameActivity.GameType.EXTREME;
+                gameType = GameRunner.GameType.EXTREME;
             } else {
-                gameType = GameActivity.GameType.NORMAL;
+                gameType = GameRunner.GameType.NORMAL;
             }
 
 

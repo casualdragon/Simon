@@ -3,7 +3,6 @@ package com.amyhill.simon;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.media.SoundPool;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -15,106 +14,79 @@ import android.widget.Button;
  */
 
 public class ColorButton extends Button {
+    public enum Color {BLUE, GREEN, YELLOW, RED}
+
     //Fields
-    private int colorID;
-    private int baseColor;
-    private int flashColor;
+    private Color color;
     private int soundID;
-    private int duration;
-    private int id;
     private int radius;
-    private boolean makesSound;
     private SoundPool soundPool;
     Context context;
+
+    private int [] baseColorIDs = {R.color.colorBlue, R.color.colorGreen, R.color.colorYellow, R.color.colorRed};
+    private int [] flashColorIDs = {R.color.colorBlueFlash, R.color.colorGreenFlash, R.color.colorYellowFlash, R.color.colorRedFLash};
 
 
     public ColorButton(Context context) {
         super(context);
-        initialConstructorSetup(context);
+        this.context = context;
     }
 
     public ColorButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialConstructorSetup(context);
+        this.context = context;
     }
 
     //Getters and Setters
-    public int getColorID() {
-        return colorID;
-    }
-
-    public void setColorID(int baseColorID) {
-        this.colorID = baseColorID;
-     setBaseColor(ContextCompat.getColor(context, colorID));
-    }
-
-    public int getBaseColor() {
-        return baseColor;
-    }
-
-    public void setBaseColor(int baseColor) {
-        this.baseColor = baseColor;
+    public void setSoundPool(SoundPool soundPool){this.soundPool = soundPool;}
+    public void setSoundID(int soundID){this.soundID = soundID;}
+    public void setColor(Color color){
+        this.color = color;
         generateBackground(false);
     }
 
-    public int getFlashColor() {
-        return flashColor;
-    }
-
-    public void setFlashColorID(int flashColorID) {
-        this.flashColor = ContextCompat.getColor(context, flashColorID);
-    }
-
-    public void setSoundPool(SoundPool sp){this.soundPool = sp; makesSound = true;}
-
-    public int getSound() {
-        return soundID;
-    }
-
-    public void setSound(int sound) {
-        this.soundID = sound;
-    }
-
-    public void setId(int id){this.id = id;}
-
-    public int getID(){return id;}
-
+    public int getIDColor(){return color.ordinal();}
 
     //Public methods
     //A method for setting up all the details not set in the contructors.
-    public void setUpButton(int baseColorID, int flashColorID, OnClickListener listener, int radius){
-        this.colorID = baseColorID;
-        this.baseColor = ContextCompat.getColor(context, baseColorID);
-        this.flashColor = ContextCompat.getColor(context, flashColorID);
+    public void setUpButton(Color color, OnClickListener listener, int radius){
+        this.color = color;
         this.radius = radius;
         this.setOnClickListener(listener);
         generateBackground(false);
     }
 
     //Starts the async task that flashes and makes the button sound.
-    public void pokeButton(int duration){
-        if(flashColor != 0 && baseColor != 0) {
-            this.duration = duration;
+    public void pokeButton(int duration) {
+        generateBackground(true);
+        playSound();
 
-            generateBackground(true);
-            playSound();
+        Handler handler = new Handler();
 
-            Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                generateBackground(false);
+            }
+        }, duration);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    generateBackground(false);
-                }
-            }, duration);
+    }
+
+    //this is for a special button that defaults to red and flashes another color
+    public void redTheButton(){
+        for(int i = 0; i < baseColorIDs.length; i++){
+            baseColorIDs[i] =  R.color.colorRed;
+        }
+        generateBackground(false);
+    }
+
+
+    public void playSound(){
+        if (soundPool != null) {
+            soundPool.play(soundID, .5f, 1.0f, 0, 0, 1.0f);
         }
     }
 
-    public void playSound() {
-        if(makesSound) {
-            soundPool.play(getSound(), .5f, 1.0f, 0, 0, 1.0f);
-        }
-    }
 
     //Private helper methods
     private void generateBackground(boolean isFlashColor) {
@@ -122,19 +94,11 @@ public class ColorButton extends Button {
         background.setStroke(10, ContextCompat.getColor(context, R.color.colorPrimaryDark));
         background.setCornerRadius(radius);
         if (isFlashColor) {
-            background.setColor(flashColor);
+            background.setColor(ContextCompat.getColor(context, flashColorIDs[this.color.ordinal()]));
         } else {
-            background.setColor(baseColor);
+            background.setColor(ContextCompat.getColor(context, baseColorIDs[this.color.ordinal()]));
         }
         setBackground(background);
-    }
-
-    //Helper for constructor
-    private void initialConstructorSetup(Context context) {
-        this.context = context;
-        this.baseColor = 0;
-        this.flashColor = 0;
-        makesSound = false;
     }
 
 }

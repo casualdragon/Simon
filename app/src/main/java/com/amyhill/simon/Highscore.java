@@ -15,33 +15,19 @@ import java.io.Serializable;
  */
 
 public class Highscore  implements Serializable{
-    public int getHighscore(int i) {
-        return highscore[i];
-    }
-
-    public String getName(int i) {
-        return name[i];
-    }
-
-    public GameActivity.GameType getGameType(int i) {
-        return gameType[i];
-    }
-
+    private final String FILE_NAME = "highscores1.txt";
     private int [] highscore = new int [3];
     private String [] name = new String [3];
-    private GameActivity.GameType [] gameType = new GameActivity.GameType[3];
-    Context context;
-    private String filename = "highscores.txt";
+    private GameRunner.GameType [] gameType = new GameRunner.GameType[3];
 
-    public Highscore(Context context) {
+
+    public Highscore() {
         for (int i = 0; i < highscore.length; i++) {
             highscore[i] = 0;
             name[i] = "";
-            gameType[i] = GameActivity.GameType.NORMAL;
+            gameType[i] = GameRunner.GameType.NORMAL;
         }
     }
-
-
 
     public void checkHighScore(int value){
         if(value > highscore[0]){
@@ -61,4 +47,51 @@ public class Highscore  implements Serializable{
         }
     }
 
+    public int [] getHighscores(){return highscore;}
+
+
+    public void writeFile(Context context){
+        try{
+            FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this);
+
+            oos.close();
+            fos.close();
+            Log.i("==============", "Game wrote the file");
+
+        }catch (Exception e){
+            Log.i("==============", e.getMessage());
+        }
+    }
+
+    public boolean readFile(Context context){
+        try{
+            FileInputStream fis = context.openFileInput(FILE_NAME);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            highscore = ((Highscore) ois.readObject()).getHighscores();
+
+            fis.close();
+            ois.close();
+            Log.i("==============", "Game read the file");
+
+        }catch (Exception e){
+            Log.i("==============", e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public int getHighscore(int i) {
+        return highscore[i];
+    }
+
+    public String getName(int i) {
+        return name[i];
+    }
+
+    public GameRunner.GameType getGameType(int i) {
+        return gameType[i];
+    }
 }

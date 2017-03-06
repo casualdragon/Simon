@@ -21,10 +21,10 @@ public class MainActivity extends AppCompatActivity {
 
         int radius = 100;
 
-        play.setUpButton(R.color.colorBlue, R.color.colorBlueFlash, listener, radius);
-        ins.setUpButton(R.color.colorGreen, R.color.colorGreenFlash, listener, radius);
-        about.setUpButton(R.color.colorYellow, R.color.colorYellowFlash, listener, radius);
-        exit.setUpButton(R.color.colorRed, R.color.colorRedFLash, listener, radius);
+        play.setUpButton(ColorButton.Color.BLUE, listener, radius);
+        ins.setUpButton(ColorButton.Color.GREEN, listener, radius);
+        about.setUpButton(ColorButton.Color.YELLOW, listener, radius);
+        exit.setUpButton(ColorButton.Color.RED, listener, radius);
     }
 
     class clickListener implements View.OnClickListener{
