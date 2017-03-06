@@ -17,7 +17,7 @@ import java.util.Random;
 public class GameRunner {
     public enum GameType implements Serializable {NORMAL, COLOR, POSITION, EXTREME}
     private final static int DURATION = 250;
-    private final static int EXTREME_DURATION = 50;
+    private final static int EXTREME_DURATION = 100;
 
     private int score;
     private int count;
@@ -41,6 +41,8 @@ public class GameRunner {
         simonGame.generatePattern();
         score = 0;
         count = 0;
+
+        shuffleButtons();
 
         runAsyncPlayer();
     }
@@ -71,16 +73,7 @@ public class GameRunner {
             }
         }
 
-        if(gameType == GameType.COLOR || gameType == GameType.POSITION){
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    shuffleButtons();
-                }
-            }, DURATION);
-
-        }
+        shuffleButtons();
 
         if(didSucceed){
             if(count == simonGame.getPatternLength()) {
@@ -148,26 +141,32 @@ public class GameRunner {
     }
 
     private void shuffleButtons(){
-        ArrayList<ColorButton.Color> numbers = new ArrayList<>();
-        ArrayList<ColorButton.Color> shuffledNumbers = new ArrayList<>();
-        Random random = new Random();
+        if(gameType == GameType.COLOR || gameType == GameType.POSITION){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ArrayList<ColorButton.Color> numbers = new ArrayList<>();
+                    ArrayList<ColorButton.Color> shuffledNumbers = new ArrayList<>();
+                    Random random = new Random();
 
-        numbers.add(ColorButton.Color.BLUE);
-        numbers.add(ColorButton.Color.GREEN);
-        numbers.add(ColorButton.Color.YELLOW);
-        numbers.add(ColorButton.Color.RED);
+                    numbers.add(ColorButton.Color.BLUE);
+                    numbers.add(ColorButton.Color.GREEN);
+                    numbers.add(ColorButton.Color.YELLOW);
+                    numbers.add(ColorButton.Color.RED);
 
-        for(int i = 0; i < 4; i++){
-            int number = random.nextInt(4-i);
-            shuffledNumbers.add(numbers.get(number));
-            numbers.remove(number);
+                    for(int i = 0; i < 4; i++){
+                        int number = random.nextInt(4-i);
+                        shuffledNumbers.add(numbers.get(number));
+                        numbers.remove(number);
+                    }
+
+                    for(int i = 0; i < 4; i++) {
+                        buttons[i].setColor(shuffledNumbers.get(i));
+                    }
+                }
+            }, DURATION);
         }
-
-        for(int i = 0; i < 4; i++) {
-            buttons[i].setColor(shuffledNumbers.get(i));
-        }
-
-
     }
 
     class PatternPlayer extends AsyncTask<Void, Integer, Void>{

@@ -58,7 +58,7 @@ public class SimonGame {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return random.nextInt(4);
+        return random.nextInt(40) % 4;
     }
 
     //Getters and Setters
