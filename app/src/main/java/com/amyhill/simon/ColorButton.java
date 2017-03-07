@@ -21,7 +21,7 @@ public class ColorButton extends Button {
     private int soundID;
     private int radius;
     private SoundPool soundPool;
-    Context context;
+
 
     private int [] baseColorIDs = {R.color.colorBlue, R.color.colorGreen, R.color.colorYellow, R.color.colorRed};
     private int [] flashColorIDs = {R.color.colorBlueFlash, R.color.colorGreenFlash, R.color.colorYellowFlash, R.color.colorRedFLash};
@@ -29,12 +29,10 @@ public class ColorButton extends Button {
 
     public ColorButton(Context context) {
         super(context);
-        this.context = context;
     }
 
     public ColorButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
     }
 
     //Getters and Setters
@@ -91,12 +89,12 @@ public class ColorButton extends Button {
     //Private helper methods
     private void generateBackground(boolean isFlashColor) {
         GradientDrawable background = new GradientDrawable();
-        background.setStroke(10, ContextCompat.getColor(context, R.color.colorPrimaryDark));
+        background.setStroke(10, ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
         background.setCornerRadius(radius);
         if (isFlashColor) {
-            background.setColor(ContextCompat.getColor(context, flashColorIDs[this.color.ordinal()]));
+            background.setColor(ContextCompat.getColor(getContext(), flashColorIDs[this.color.ordinal()]));
         } else {
-            background.setColor(ContextCompat.getColor(context, baseColorIDs[this.color.ordinal()]));
+            background.setColor(ContextCompat.getColor(getContext(), baseColorIDs[this.color.ordinal()]));
         }
         setBackground(background);
     }
