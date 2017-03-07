@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class GameRunner {
         this.gameType = gameType;
         highscores = new Highscore();
         highscores.readFile(buttons[0].getContext());
+        for(int i = 0; i < 3; i++){
+            Log.i("======================", "GameType: " + highscores.getHighscore(i));
+        }
         patternPlayer = new PatternPlayer();
     }
 
@@ -90,7 +94,7 @@ public class GameRunner {
             }
             buttons[4].pokeButton(DURATION);
             toggleButtons(false);
-            highscores.checkHighScore(score);
+            highscores.checkHighScore(score, gameType);
             loseDialog();
         }
 

@@ -29,21 +29,27 @@ public class Highscore  implements Serializable{
         }
     }
 
-    public void checkHighScore(int value){
-        if(value > highscore[0]){
+    public void checkHighScore(int value, GameRunner.GameType gameType){
+        if(value >= highscore[0]){
             Log.i("===============", value + " " + highscore[0]);
             highscore[2] = highscore[1];
+            this.gameType[2] = this.gameType[1];
             highscore[1] = highscore [0];
+            this.gameType[1] = this.gameType[0];
             highscore[0] = value;
+            this.gameType[0] = gameType;
 
         }else if(value > highscore[1]) {
             Log.i("===============", value + " " + highscore[1]);
             highscore[2] = highscore[1];
+            this.gameType[2] = this.gameType[1];
             highscore[1] = value;
+            this.gameType[1] = gameType;
 
         }else if(value > highscore[2]){
             Log.i("===============", value + " " + highscore[2]);
             highscore[2] = value;
+            this.gameType[2] = gameType;
         }
     }
 
@@ -70,14 +76,17 @@ public class Highscore  implements Serializable{
             FileInputStream fis = context.openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
-            highscore = ((Highscore) ois.readObject()).getHighscores();
+            Highscore high = (Highscore) ois.readObject();
+
+            //highscore = ((Highscore) ois.readObject()).getHighscores();
+            highscore = high.getHighscores();
+            gameType = high.getGameType();
 
             fis.close();
             ois.close();
             Log.i("==============", "Game read the file");
 
         }catch (Exception e){
-            Log.i("==============", e.getMessage());
             return false;
         }
         return true;
@@ -92,6 +101,11 @@ public class Highscore  implements Serializable{
     }
 
     public GameRunner.GameType getGameType(int i) {
+        Log.i("=====================", "GameType: " + gameType[i]);
         return gameType[i];
+    }
+    public GameRunner.GameType [] getGameType() {
+        Log.i("=====================", "GameType: " + gameType);
+        return gameType;
     }
 }
