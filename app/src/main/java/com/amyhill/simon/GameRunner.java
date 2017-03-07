@@ -225,6 +225,7 @@ public class GameRunner {
                      buttons) {
                     if(button.getIDColor() ==  values[0]){
                         button.pokeButton(DURATION);
+                        break;
                     }
                 }
             } else {
