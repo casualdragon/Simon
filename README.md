@@ -16,6 +16,10 @@ This application was built for an android development class. Other projects incl
 * [AZ_Paint](https://github.com/nonamehero2/AZ_Paint)
 * [Dungeon_Crawler](https://github.com/nonamehero2/DungeonCrawler)
 
+## Contributors
+* [Amy Hill](https://github.com/casualdragon)
+* [Zachary Taylor](https://github.com/nonamehero2)
+
 ## Purpose
 The purpose of this application was to experiment with playing sounds and using
 threads properly in Android.
@@ -32,16 +36,12 @@ to a degree but was done after the fact to no immediate benefit of the developer
 ## Devices
 This app was tested with the Nexus 6p and Nexus 5x Emulator.
 
-## Contributors
-* [Amy Hill](https://github.com/casualdragon)
-* [Zachary Taylor](https://github.com/nonamehero2)
-
 ## Disclaimer
 This application was created as a school project and is not intended to be published
 in any form other than this Github Repo and its forks. The application and contributors
 listed above are in no way associated with the owners of the Simon trademark. If any
-issues arise from this repo, it can be removed at the request of the trademark owners
-contacting one of the above contributors.
+issues arise from the use of Simon in this repo, it can be removed at the request of
+the Simon trademark owners by contacting one of the above contributors.
 
 ## Permissions
 All assets in this project were created from scratch or are freely available in the
